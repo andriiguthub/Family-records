@@ -1,0 +1,4 @@
+CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, username TEXT NOT NULL, hash TEXT NOT NULL);
+CREATE TABLE sqlite_sequence(name,seq);
+CREATE TABLE person (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,name TEXT,middlename TEXT, lastname TEXT, birth_date TEXT, birth_place TEXT, death_date TEXT, death_place TEXT);
+CREATE TABLE parent (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, person_id NUMERIC NOT NULL, father_id NUMERIC NOT NULL, mother_id NUMERIC NOT NULL, amount NUMERIC, FOREIGN KEY (father_id) REFERENCES person(id), FOREIGN KEY (mother_id) REFERENCES person(id));

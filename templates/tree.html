@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Tree
+{% endblock %}
+
+{% block main %}
+    <header class="navbar">
+        <div>
+            <a href="/add" class="btn btn-primary">Add person</a>
+        </div>
+        <div>
+            <form action="/tree" method="post">
+                <input autofocus name="search" placeholder="search" type="search" value="{%if search is defined and search %}{{ search }}{% endif %}">
+                <button class="btn btn-secondary" type="submit">Search</button>
+            </form>
+        </div>
+    </header>
+
+
+
+
+    <table class="table table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th>name</th>
+                <th>lastname</th>
+                <th>sex</th>
+                <th>birthday date</th>
+                <th>birthday place</th>
+                <th>death date</th>
+                <th>death place</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for id in user_data %}
+                <tr>
+                    <td><a href="/details?person_id={{id.id}}">{{ id.name }}</a></td>
+                    <td><a href="/details?person_id={{id.id}}">{{ id.lastname }}</a></td>
+                    <td>{{ id.sex }}</td>
+                    <td>{{ id.birth_date }}</td>
+                    <td>{{ id.birth_place }}</td>
+                    <td>{{ id.death_date }}</td>
+                    <td>{{ id.death_place }}</td>
+                    <td><a href="/details?person_id={{id.id}}" class="btn btn-secondary">Details</a></td>
+                    <td><a href="/edit?person_id={{id.id}}" class="btn btn-secondary">Edit</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
