@@ -13,9 +13,9 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure to use SQLite database
-db = SQL("sqlite:///familytree.db")
-# con = sqlite3.connect("familytree.db", check_same_thread=False)
-# db = con.cursor()
+# db = SQL("sqlite:///familytree.db")
+con = sqlite3.connect("familytree.db", check_same_thread=False)
+db = con.cursor()
 
 @app.after_request
 def after_request(response):
