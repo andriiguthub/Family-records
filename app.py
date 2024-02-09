@@ -2,10 +2,17 @@ import sqlite3
 from flask import Flask, flash, redirect, render_template, request, session, g
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
+from django.contrib.auth.decorators import login_required
 
 # Configure application
 app = Flask(__name__)
 
+# Configure login
+login_manager = LoginManager()
+login_manager.init_app(app)
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
