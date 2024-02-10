@@ -4,7 +4,6 @@ from flask_login import LoginManager, login_required
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
-
 # Configure application
 app = Flask(__name__)
 
@@ -118,12 +117,12 @@ def tree():
     if request.method == 'POST':
         search = request.form['search']
         if search == "":
-            user_data = db.execute("SELECT * FROM person")
+            user_data = db.execute("SELECT * FROM person").fetchall()
         if search != "":
-            user_data = db.execute("SELECT * FROM person WHERE lastname LIKE ? OR name LIKE ?", [search], [search])
+            user_data = db.execute("SELECT * FROM person WHERE lastname LIKE ? OR name LIKE ?", [search, search]).fetchall()
         return render_template("tree.html", user_data=user_data, search=search)
     else:
-        user_data = db.execute("SELECT * FROM person")
+        user_data = db.execute("SELECT * FROM person").fetchall()
         return render_template("tree.html", user_data=user_data)
 
 
@@ -147,18 +146,22 @@ def add():
         except:
             mother_id = ""
         db.execute("INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES (?, ?, ?, ?, ?, ?, ?)", [name, lastname, birth_date, birth_place, death_date, death_place, sex])
-        person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND birth_place = ? AND death_date = ? AND death_place = ? AND sex = ?", [name, lastname, birth_date, birth_place, death_date, death_place, sex])
+        con.commit()
+        person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND birth_place = ? AND death_date = ? AND death_place = ? AND sex = ?", [name, lastname, birth_date, birth_place, death_date, death_place, sex]).fetchall()
         person_id = person[0]["id"]
         if mother_id != "" and father_id != "":
             db.execute("INSERT INTO parent (person_id, father_id, mother_id) VALUES (?, ?, ?)", [person_id, father_id, mother_id])
+            con.commit()
         if mother_id != "" and father_id == "":
             db.execute("INSERT INTO parent (person_id, mother_id) VALUES (?, ?)", [person_id, mother_id])
+            con.commit()
         if mother_id == "" and father_id != "":
             db.execute("INSERT INTO parent (person_id, father_id) VALUES (?, ?)", [person_id, father_id])
+            con.commit()
         return redirect("/tree")
     else:
-        man = db.execute("SELECT * FROM person WHERE sex = ?", ['male'])
-        woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female'])
+        man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
+        woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female']).fetchall()
         return render_template("add.html", man=man, woman=woman)
 
 
@@ -184,29 +187,33 @@ def edit():
         except:
             mother_id = ""
         db.execute("UPDATE person SET name = ?, lastname = ?, birth_date = ?, birth_place = ?, death_date = ?, death_place = ?, sex = ? WHERE id = ?", [name, lastname, birth_date, birth_place, death_date, death_place, sex, person_id])
-        parents_test = db.execute("SELECT * FROM parent WHERE person_id = ?", [person_id])
+        parents_test = db.execute("SELECT * FROM parent WHERE person_id = ?", [person_id]).fetchall()
         if len(parents_test) == 0:
             if mother_id != "" and father_id != "":
                 db.execute("INSERT INTO parent (person_id, father_id, mother_id) VALUES (?, ?, ?)", [person_id, father_id, mother_id])
+                con.commit()
             if mother_id != "" and father_id == "":
                 db.execute("INSERT INTO parent (person_id, mother_id) VALUES (?, ?)", [person_id, mother_id])
+                con.commit()
             if mother_id == "" and father_id != "":
                 db.execute("INSERT INTO parent (person_id, father_id) VALUES (?, ?)", [person_id, father_id])
+                con.commit()
         else:
             db.execute("UPDATE parent SET father_id = ?, mother_id = ? WHERE person_id = ?", [father_id, mother_id, person_id])
+            con.commit()
         return redirect("/tree")
     else:
         person_id = request.args.get('person_id')
-        person_data = db.execute("SELECT * FROM person WHERE id = ?", person_id)
+        person_data = db.execute("SELECT * FROM person WHERE id = ?", person_id).fetchall()
         birth_date = person_data[0].get('birth_date')
-        father = db.execute("SELECT * FROM parent JOIN person ON parent.father_id = person.id WHERE parent.person_id = ?", [person_id])
+        father = db.execute("SELECT * FROM parent JOIN person ON parent.father_id = person.id WHERE parent.person_id = ?", [person_id]).fetchall()
         man = []
         if len(father) == 0:
-            man = db.execute("SELECT * FROM person WHERE person.sex = ? and person.birth_date < ? ORDER BY ?", ['male', birth_date, 'birth_date'])
-        mother = db.execute("SELECT * FROM parent JOIN person ON parent.mother_id = person.id WHERE parent.person_id = ?", [person_id])
+            man = db.execute("SELECT * FROM person WHERE person.sex = ? and person.birth_date < ? ORDER BY ?", ['male', birth_date, 'birth_date']).fetchall()
+        mother = db.execute("SELECT * FROM parent JOIN person ON parent.mother_id = person.id WHERE parent.person_id = ?", [person_id]).fetchall()
         woman = []
         if len(mother) == 0:
-            woman = db.execute("SELECT * FROM person WHERE person.sex = ? and person.birth_date < ? ORDER BY ?", ['female', birth_date, 'birth_date'])
+            woman = db.execute("SELECT * FROM person WHERE person.sex = ? and person.birth_date < ? ORDER BY ?", ['female', birth_date, 'birth_date']).fetchall()
         return render_template("edit.html", person_data=person_data, father=father, mother=mother, man=man, woman=woman, person_id=person_id)
 
 
@@ -216,10 +223,10 @@ def edit():
 def details():
         person_id = request.args.get('person_id')
         if not len(person_id) == 0 or not person_id == None:
-            person_data = db.execute("SELECT * FROM person WHERE id = ?", [person_id])
-            father_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.father_id WHERE parent.person_id = ?", [person_id])
-            mother_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.mother_id WHERE parent.person_id = ?", [person_id])
-            child_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.person_id WHERE parent.father_id = ? OR parent.mother_id = ?", [person_id, person_id])
+            person_data = db.execute("SELECT * FROM person WHERE id = ?", [person_id]).fetchall()
+            father_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.father_id WHERE parent.person_id = ?", [person_id]).fetchall()
+            mother_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.mother_id WHERE parent.person_id = ?", [person_id]).fetchall()
+            child_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.person_id WHERE parent.father_id = ? OR parent.mother_id = ?", [person_id, person_id]).fetchall()
             return render_template("details.html", person_data=person_data, father_data=father_data, mother_data=mother_data, child_data=child_data)
         else:
             return redirect("/tree")
