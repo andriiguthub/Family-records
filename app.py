@@ -46,10 +46,9 @@ def register():
         username = request.form['username']
         password = request.form['password']
         confirmation = request.form['confirmation']
-        check_username = db.execute("SELECT username FROM users")
-        for n in range(len(check_username)):
-            if check_username[n].get("username") == username:
-                return 'Unique name is required!', 400
+        check_username = db.execute("SELECT username FROM users WHERE username = ?", [username])
+        if not check_username.fetchone() is None:
+            return 'Unique name is required!', 400
         if not username:
             return 'Name is required!', 400
         elif not password:
@@ -59,7 +58,7 @@ def register():
         elif not password == confirmation:
             return 'Password should be equal to Password confirmation!', 400
         else:
-            db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", username, generate_password_hash(password))
+            db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", [username], [generate_password_hash(password)])
             return render_template("login.html")
     else:
         return render_template("register.html")
@@ -77,14 +76,15 @@ def login():
         # Ensure username was submitted
         if not request.form.get("username"):
             return apology("must provide username", 403)
-
         # Ensure password was submitted
         elif not request.form.get("password"):
             return apology("must provide password", 403)
-
+        username = request.form.get("username")
+        print(username)
+        
         # Query database for username
         rows = db.execute(
-            "SELECT * FROM users WHERE username = ?", request.form.get("username")
+            "SELECT * FROM users WHERE username = ?", [username]
         )
 
         # Ensure username exists and password is correct
@@ -118,7 +118,7 @@ def tree():
         if search == "":
             user_data = db.execute("SELECT * FROM person")
         if search != "":
-            user_data = db.execute("SELECT * FROM person WHERE lastname LIKE ? OR name LIKE ?", search, search)
+            user_data = db.execute("SELECT * FROM person WHERE lastname LIKE ? OR name LIKE ?", [search], [search])
         return render_template("tree.html", user_data=user_data, search=search)
     else:
         user_data = db.execute("SELECT * FROM person")
