@@ -147,8 +147,8 @@ def add():
             mother_id = ""
         db.execute("INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES (?, ?, ?, ?, ?, ?, ?)", [name, lastname, birth_date, birth_place, death_date, death_place, sex])
         con.commit()
-        person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND birth_place = ? AND death_date = ? AND death_place = ? AND sex = ?", [name, lastname, birth_date, birth_place, death_date, death_place, sex]).fetchall()
-        person_id = person[0]["id"]
+        person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND birth_place = ? AND death_date = ? AND death_place = ? AND sex = ?", [name, lastname, birth_date, birth_place, death_date, death_place, sex])
+        person_id = person.fetchall()
         if mother_id != "" and father_id != "":
             db.execute("INSERT INTO parent (person_id, father_id, mother_id) VALUES (?, ?, ?)", [person_id, father_id, mother_id])
             con.commit()
