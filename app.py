@@ -4,6 +4,7 @@ from flask_login import LoginManager, login_required
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
+
 # Configure application
 app = Flask(__name__)
 
@@ -112,7 +113,7 @@ def logout():
 
 
 @app.route("/tree", methods=["GET", "POST"])
-@login_required
+#@login_required
 def tree():
     if request.method == 'POST':
         search = request.form['search']
@@ -127,7 +128,7 @@ def tree():
 
 
 @app.route("/add", methods=["GET", "POST"])
-@login_required
+#@login_required
 def add():
     if request.method == 'POST':
         name = request.form['name']
@@ -162,7 +163,7 @@ def add():
 
 
 @app.route("/edit", methods=["GET", "POST"])
-@login_required
+#@login_required
 def edit():
     if request.method == 'POST':
         person_id = request.form['person_id']
@@ -211,7 +212,7 @@ def edit():
 
 
 @app.route("/details")
-@login_required
+#@login_required
 def details():
         person_id = request.args.get('person_id')
         if not len(person_id) == 0 or not person_id == None:
