@@ -9,6 +9,7 @@
         <div>
             <a href="/tree" class="btn btn-secondary">HOME</a>
         </div>
+        {{ person_data }}<br />{{ person_data[0] }}
     </header>
     <form action="/edit" method="post">
         <input name="person_id" type="hidden" value="{{ person_id }}">
