@@ -205,7 +205,7 @@ def edit():
     else:
         person_id = request.args.get('person_id')
         person_data = db.execute("SELECT id, name, lastname, birth_date, birth_place, death_date, death_place, sex FROM person WHERE id = ?", [person_id]).fetchall()
-        id, name, lastname, birth_date, birth_place, death_date, death_place, sex = db.execute("SELECT * FROM person WHERE id = ?", [person_id]).fetchone()
+        id, name, lastname, birth_date, birth_place, death_date, death_place, sex = db.execute("SELECT id, name, lastname, birth_date, birth_place, death_date, death_place, sex FROM person WHERE id = ?", [person_id]).fetchone()
         print("data:", id, name, lastname, birth_date, birth_place, death_date, death_place, sex)
         father = db.execute("SELECT * FROM parent JOIN person ON parent.father_id = person.id WHERE parent.person_id = ?", [person_id]).fetchall()
         man = []
