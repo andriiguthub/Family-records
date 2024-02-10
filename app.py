@@ -58,7 +58,8 @@ def register():
         elif not password == confirmation:
             return 'Password should be equal to Password confirmation!', 400
         else:
-            db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", [username], [generate_password_hash(password)])
+            password_hash = generate_password_hash(password)
+            db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", (username, password_hash))
             return render_template("login.html")
     else:
         return render_template("register.html")
