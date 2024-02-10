@@ -3,4 +3,3 @@ Flask-Session
 flask-login
 pytz
 requests
-django
