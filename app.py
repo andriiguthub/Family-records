@@ -205,6 +205,7 @@ def edit():
     else:
         person_id = request.args.get('person_id')
         person_data = db.execute("SELECT * FROM person WHERE id = ?", [person_id]).fetchall()
+        print(person_data)
         birth_date = person_data[0].get('birth_date')
         father = db.execute("SELECT * FROM parent JOIN person ON parent.father_id = person.id WHERE parent.person_id = ?", [person_id]).fetchall()
         man = []
