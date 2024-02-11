@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, flash, redirect, render_template, request, session, g
+from flask import Flask, redirect, render_template, request, session
 from flask_login import LoginManager, login_required
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -117,12 +117,12 @@ def tree():
     if request.method == 'POST':
         search = request.form['search']
         if search == "":
-            user_data = db.execute("SELECT * FROM person").fetchall()
+            user_data = db.execute("SELECT name, lastname, sex, birth_date, birth_place, death_date, death_place FROM person").fetchall()
         if search != "":
-            user_data = db.execute("SELECT * FROM person WHERE lastname LIKE ? OR name LIKE ?", [search, search]).fetchall()
+            user_data = db.execute("SELECT name, lastname, sex, birth_date, birth_place, death_date, death_place FROM person WHERE lastname LIKE ? OR name LIKE ?", [search, search]).fetchall()
         return render_template("tree.html", user_data=user_data, search=search)
     else:
-        user_data = db.execute("SELECT * FROM person").fetchall()
+        user_data = db.execute("SELECT name, lastname, sex, birth_date, birth_place, death_date, death_place FROM person").fetchall()
         return render_template("tree.html", user_data=user_data)
 
 
