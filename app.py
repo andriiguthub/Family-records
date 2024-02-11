@@ -22,6 +22,7 @@ Session(app)
 
 # Configure to use SQLite database
 con = sqlite3.connect("familytree.db", check_same_thread=False)
+con.row_factory = sqlite3.Row
 db = con.cursor()
 
 @app.after_request
