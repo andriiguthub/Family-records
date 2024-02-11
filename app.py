@@ -50,8 +50,7 @@ def register():
         username = request.form['username']
         password = request.form['password']
         confirmation = request.form['confirmation']
-        check_username = db.execute(
-            "SELECT username FROM users WHERE username = ?", [username])
+        check_username = db.execute("SELECT username FROM users WHERE username = ?", [username])
         if not check_username.fetchone() is None:
             return 'Unique name is required!', 400
         if not username:
@@ -64,8 +63,7 @@ def register():
             return 'Password should be equal to Password confirmation!', 400
         else:
             password_hash = generate_password_hash(password)
-            db.execute("INSERT INTO users (username, hash) VALUES (?, ?)",
-                       (username, password_hash))
+            db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", (username, password_hash))
             con.commit()
             return render_template("login.html")
     else:
@@ -159,21 +157,17 @@ def add():
         db.executescript(sql)
         # db.execute("INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES (?, ?, ?, ?, ?, ?, ?)", [name, lastname, birth_date, birth_place, death_date, death_place, sex])
         # con.commit()
-        person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND birth_place = ? AND death_date = ? AND death_place = ? AND sex = ? ORDER BY id DESC", [
-                            name, lastname, birth_date, birth_place, death_date, death_place, sex])
+        person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND birth_place = ? AND death_date = ? AND death_place = ? AND sex = ? ORDER BY id DESC", [name, lastname, birth_date, birth_place, death_date, death_place, sex])
         person_id = person.fetchone()
         print(person_id)
         if mother_id != "" and father_id != "":
-            db.execute("INSERT INTO parent (person_id, father_id, mother_id) VALUES (?, ?, ?)", [
-                       person_id, father_id, mother_id])
+            db.execute("INSERT INTO parent (person_id, father_id, mother_id) VALUES (?, ?, ?)", [person_id, father_id, mother_id])
             con.commit()
         if mother_id != "" and father_id == "":
-            db.execute("INSERT INTO parent (person_id, mother_id) VALUES (?, ?)", [
-                       person_id, mother_id])
+            db.execute("INSERT INTO parent (person_id, mother_id) VALUES (?, ?)", [person_id, mother_id])
             con.commit()
         if mother_id == "" and father_id != "":
-            db.execute("INSERT INTO parent (person_id, father_id) VALUES (?, ?)", [
-                       person_id, father_id])
+            db.execute("INSERT INTO parent (person_id, father_id) VALUES (?, ?)", [person_id, father_id])
             con.commit()
         return redirect("/tree")
     else:
@@ -208,11 +202,9 @@ def edit():
         sql = f"SELECT * FROM parent WHERE person_id = {person_id};"
         inparents = db.execute(sql).fetchone()
         if not inparents == None:
-            sql = f"UPDATE person SET name = '{name}', lastname = '{lastname}', birth_date = '{birth_date}', birth_place = '{birth_place}', death_date = '{death_date}', death_place = '{
-                death_place}', sex = '{sex}' WHERE id = {person_id}; UPDATE parent SET father_id = '{father_id}', mother_id = '{mother_id}' WHERE person_id = '{person_id}';"
+            sql = f"UPDATE person SET name = '{name}', lastname = '{lastname}', birth_date = '{birth_date}', birth_place = '{birth_place}', death_date = '{death_date}', death_place = '{death_place}', sex = '{sex}' WHERE id = {person_id}; UPDATE parent SET father_id = '{father_id}', mother_id = '{mother_id}' WHERE person_id = '{person_id}';"
         else:
-            sql = f"UPDATE person SET name = '{name}', lastname = '{lastname}', birth_date = '{birth_date}', birth_place = '{birth_place}', death_date = '{death_date}', death_place = '{
-                death_place}', sex = '{sex}' WHERE id = {person_id}; INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{mother_id}');"
+            sql = f"UPDATE person SET name = '{name}', lastname = '{lastname}', birth_date = '{birth_date}', birth_place = '{birth_place}', death_date = '{death_date}', death_place = '{death_place}', sex = '{sex}' WHERE id = {person_id}; INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{mother_id}');"
         db.executescript(sql)
         # parents_test = db.execute("SELECT * FROM parent WHERE person_id = ?", [person_id]).fetchall()
         # if len(parents_test) == 0:
@@ -233,22 +225,18 @@ def edit():
         person_id = request.args.get('person_id')
         person_data = db.execute(
             "SELECT id, name, lastname, birth_date, birth_place, death_date, death_place, sex FROM person WHERE id = ?", [person_id]).fetchall()
-        id, name, lastname, birth_date, birth_place, death_date, death_place, sex = db.execute(
-            "SELECT id, name, lastname, birth_date, birth_place, death_date, death_place, sex FROM person WHERE id = ?", [person_id]).fetchone()
+        id, name, lastname, birth_date, birth_place, death_date, death_place, sex = db.execute("SELECT id, name, lastname, birth_date, birth_place, death_date, death_place, sex FROM person WHERE id = ?", [person_id]).fetchone()
         print("data:", id, name, lastname, birth_date,
               birth_place, death_date, death_place, sex)
-        father = db.execute(
-            "SELECT * FROM parent JOIN person ON parent.father_id = person.id WHERE parent.person_id = ?", [person_id]).fetchone()
+        father = db.execute("SELECT * FROM parent JOIN person ON parent.father_id = person.id WHERE parent.person_id = ?", [person_id]).fetchone()
         # man = []
         # if len(father) == 0:
-        man = db.execute("SELECT * FROM person WHERE person.sex = ? and person.birth_date < ? ORDER BY ?",
-                         ['male', birth_date, 'birth_date']).fetchall()
+        man = db.execute("SELECT * FROM person WHERE person.sex = ? and person.birth_date < ? ORDER BY ?", ['male', birth_date, 'birth_date']).fetchall()
         mother = db.execute(
             "SELECT * FROM parent JOIN person ON parent.mother_id = person.id WHERE parent.person_id = ?", [person_id]).fetchone()
         # woman = []
         # if len(mother) == 0:
-        woman = db.execute("SELECT * FROM person WHERE person.sex = ? and person.birth_date < ? ORDER BY ?",
-                           ['female', birth_date, 'birth_date']).fetchall()
+        woman = db.execute("SELECT * FROM person WHERE person.sex = ? and person.birth_date < ? ORDER BY ?", ['female', birth_date, 'birth_date']).fetchall()
         return render_template("edit.html", person_data=person_data, father=father, mother=mother, man=man, woman=woman, person_id=person_id)
 
 
