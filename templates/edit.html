@@ -16,17 +16,17 @@ Edit
         <div class="form-group col-md-4">
             <label for="name">Name</label>
             <input autofocus class="form-control" name="name" placeholder="name" type="text"
-                value="{{ person_data[0].name}}" autocomplete="given-name">
+                value="{{ person_data.name}}" autocomplete="given-name">
         </div>
         <div class="form-group col-md-4">
             <label for="lastname">Lastname</label>
             <input class="form-control" name="lastname" placeholder="lastname" type="text"
-                value="{{ person_data[0].lastname}}" autocomplete="family-name">
+                value="{{ person_data.lastname}}" autocomplete="family-name">
         </div>
         <div class="form-group col-md-auto">
             <label for="sex">Sex</label>
             <select class="form-select" name="sex" required='required'>
-                <option value="{{ person_data[0].sex}}" selected>{{ person_data[0].sex}}</option>
+                <option value="{{ person_data.sex}}" selected>{{ person_data.sex}}</option>
                 <option value="male">male</option>
                 <option value="female">female</option>
             </select>
@@ -36,24 +36,24 @@ Edit
         <div class="form-group col-md-auto">
             <label for="birth_date">Birth date</label>
             <input class="form-control" name="birth_date" id="birth_date" placeholder="birth_date" type="date"
-                value="{{ person_data[0].birth_date}}">
+                value="{{ person_data.birth_date}}">
         </div>
         <div class="form-group col-6">
             <label for="birth_place">Birth place</label>
             <input class="form-control" name="birth_place" id="birth_place" placeholder="birth_place" type="text"
-                value="{{ person_data[0].birth_place}}">
+                value="{{ person_data.birth_place}}">
         </div>
     </div>
     <div class="form-row">
         <div class="form-group col-md-auto">
             <label for="death_date">Death date</label>
             <input class="form-control" name="death_date" id="death_date" placeholder="death_date" type="date"
-                value="{{ person_data[0].death_date}}">
+                value="{{ person_data.death_date}}">
         </div>
         <div class="form-group col-6">
             <label for="death_place">Death place</label>
             <input class="form-control" name="death_place" id="death_place" placeholder="death_place" type="text"
-                value="{{ person_data[0].death_place}}">
+                value="{{ person_data.death_place}}">
         </div>
     </div>
     <div class="form-row">
@@ -61,8 +61,8 @@ Edit
             <label for="father_id">Father</label>
             <select class="form-select" name="father_id" id="father_id">
                 {%if father is defined and father %}
-                <option value="{{ father[0].id }}" selected>{{ father[0].birth_date }} {{ father[0].name }}
-                    {{ father[0].lastname }}</option>
+                <option value="{{ father.father_id }}" selected>{{ father.birth_date }} {{ father.name }}
+                    {{ father.lastname }}</option>
                 {% else %}
                 <option value="" disabled selected>Select father</option>
                 {% endif %}
@@ -75,8 +75,8 @@ Edit
             <label for="mother_id">Mother</label>
             <select class="form-select" name="mother_id" id="mother_id">
                 {%if mother is defined and mother %}
-                <option value="{{ mother[0].id }}" selected>{{ mother[0].birth_date }} {{ mother[0].name }}
-                    {{ mother[0].lastname }}</option>
+                <option value="{{ mother.mother_id }}" selected>{{ mother.birth_date }} {{ mother.name }}
+                    {{ mother.lastname }}</option>
                 {% else %}
                 <option value="" disabled selected>Select mother</option>
                 {% endif %}

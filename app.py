@@ -185,6 +185,7 @@ def edit():
             mother_id = request.form['mother_id']
         except:
             mother_id = ""
+        print(f"'{person_id}', '{father_id}', '{mother_id}'")
         sql = f"SELECT * FROM parent WHERE person_id = {person_id};"
         inparents = db.execute(sql).fetchone()
         if not inparents == None:
@@ -195,11 +196,11 @@ def edit():
         return redirect(f"/details?person_id={person_id}")
     else:
         person_id = request.args.get('person_id')
-        person_data = db.execute("SELECT id, name, lastname, birth_date, birth_place, death_date, death_place, sex FROM person WHERE id = ?", [person_id]).fetchall()
+        person_data = db.execute("SELECT * FROM person WHERE id = ?", [person_id]).fetchone()
         father = db.execute("SELECT * FROM parent JOIN person ON parent.father_id = person.id WHERE parent.person_id = ?", [person_id]).fetchone()
-        man = db.execute("SELECT * FROM person WHERE person.sex = ? and person.birth_date < ? ORDER BY ?", ['male', birth_date, 'birth_date']).fetchall()
+        man = db.execute(f"SELECT * FROM person WHERE person.sex = ? and person.birth_date < ? ORDER BY ?", ['male', '{person_data[birth_date]}', 'birth_date']).fetchall()
         mother = db.execute("SELECT * FROM parent JOIN person ON parent.mother_id = person.id WHERE parent.person_id = ?", [person_id]).fetchone()
-        woman = db.execute("SELECT * FROM person WHERE person.sex = ? and person.birth_date < ? ORDER BY ?", ['female', birth_date, 'birth_date']).fetchall()
+        woman = db.execute(f"SELECT * FROM person WHERE person.sex = ? and person.birth_date < ? ORDER BY ?", ['female', '{person_data[birth_date]}', 'birth_date']).fetchall()
         return render_template("edit.html", person_data=person_data, father=father, mother=mother, man=man, woman=woman, person_id=person_id)
 
 
