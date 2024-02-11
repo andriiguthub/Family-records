@@ -155,8 +155,7 @@ def add():
             mother_id = request.form['mother_id']
         except:
             mother_id = ""
-        sql = f"INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES ('{
-            name}', '{lastname}', '{birth_date}', '{birth_place}', '{death_date}', '{death_place}', '{sex}')"
+        sql = f"INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES ('{name}', '{lastname}', '{birth_date}', '{birth_place}', '{death_date}', '{death_place}', '{sex}')"
         db.executescript(sql)
         # db.execute("INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES (?, ?, ?, ?, ?, ?, ?)", [name, lastname, birth_date, birth_place, death_date, death_place, sex])
         # con.commit()
