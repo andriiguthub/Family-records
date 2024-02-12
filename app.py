@@ -242,13 +242,14 @@ def add_parent():
         person_id = person.fetchone()
         sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{mother_id}');"
         db.executescript(sql)
-        print("add_parent")
-        if sex == "male":
-            sql = f"UPDATE parent SET father_id = '{person_id}' WHERE person_id = {origin_person_id};"
-        if sex == "female":
-            sql = f"UPDATE parent SET mother_id = '{person_id}' WHERE person_id = {origin_person_id};"
-        print("sql:", sql)
-        db.executescript(sql)
+        try:
+            if sex == "male":
+                sql = f"UPDATE parent SET father_id = '{person_id}' WHERE person_id = {origin_person_id};"
+            if sex == "female":
+                sql = f"UPDATE parent SET mother_id = '{person_id}' WHERE person_id = {origin_person_id};"
+            db.executescript(sql)
+        except Exception as error:
+            print("ERROR!!!", error)
         return redirect(f"/details?person_id={origin_person_id}")
     else:
         man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
