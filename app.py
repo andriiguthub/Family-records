@@ -45,22 +45,21 @@ def index():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    """Register user"""
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         confirmation = request.form['confirmation']
         check_username = db.execute("SELECT username FROM users WHERE username = ?", [username])
         if not check_username.fetchone() is None:
-            return 'Unique name is required!', 400
+            return render_template("login.html", error="Unique name is required!")
         if not username:
-            return 'Name is required!', 400
+            return render_template("login.html", error="Name is required!")
         elif not password:
-            return 'Password is required!', 400
+            return render_template("login.html", error="Password is required!")
         elif not confirmation:
-            return 'Password confirmation is required!', 400
+            return render_template("login.html", error="Password confirmation is required!")
         elif not password == confirmation:
-            return 'Password should be equal to Password confirmation!', 400
+            return render_template("login.html", error="Password should be equal to Password confirmation!")
         else:
             password_hash = generate_password_hash(password)
             sql = "INSERT INTO users (username, hash) VALUES ('{username}', '{password_hash}');"
