@@ -156,11 +156,6 @@ def add():
         person_id = person.fetchone()
         sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{mother_id}');"
         db.executescript(sql)
-        if sex == "male":
-            sql = f"INSERT INTO parent (person_id, father_id) VALUES ('{original_person_id}', '{person_id}');"
-        if sex == "female":
-            sql = f"INSERT INTO parent (person_id, mother_id) VALUES ('{original_person_id}', '{person_id}');"
-        db.executescript(sql)
         return redirect("/tree")
     else:
         man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
@@ -249,7 +244,12 @@ def add_parent():
         sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{mother_id}');"
         db.executescript(sql)
         print("add_parent")
-        return redirect("/tree")
+        if sex == "male":
+            sql = f"INSERT INTO parent (person_id, father_id) VALUES ('{origin_person_id}', '{person_id}');"
+        if sex == "female":
+            sql = f"INSERT INTO parent (person_id, mother_id) VALUES ('{origin_person_id}', '{person_id}');"
+        db.executescript(sql)
+        return redirect(f"/details?person_id={origin_person_id}")
     else:
         man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
         woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female']).fetchall()
