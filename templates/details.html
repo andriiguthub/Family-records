@@ -14,7 +14,8 @@ Details
 <div class="container">
     <div class="row parent">
         <div class="col-md-auto">
-            father:<br />{%if father_data is defined and father_data %}
+            parents:<br />
+            {% if father_data of mother_data %}
             <table class="table table-striped">
                 <tr class="thead-light">
                     <th>name</th>
@@ -27,6 +28,7 @@ Details
                     <th></th>
                     <th></th>
                 </tr>
+                {%if father_data is defined and father_data %}
                 <tr>
                     <td>{{ father_data[0].name }}</td>
                     <td>{{ father_data[0].lastname }}</td>
@@ -39,23 +41,8 @@ Details
                     </td>
                     <td><a class="btn btn-secondary" href="/edit?person_id={{father_data[0].father_id}}">Edit</a></td>
                 </tr>
-            </table>
-            {% else %}
-            <p>No data!</p>
-            {% endif %}
-            mother:<br />{%if mother_data is defined and mother_data %}
-            <table class="table table-striped">
-                <tr class="thead-light">
-                    <th>name</th>
-                    <th>lastname</th>
-                    <th>sex</th>
-                    <th>birthday date</th>
-                    <th>birthday place</th>
-                    <th>death date</th>
-                    <th>death place</th>
-                    <th></th>
-                    <th></th>
-                </tr>
+                {% endif %}
+                {%if mother_data is defined and mother_data %}
                 <tr>
                     <td>{{ mother_data[0].name }}</td>
                     <td>{{ mother_data[0].lastname }}</td>
@@ -68,7 +55,9 @@ Details
                     </td>
                     <td><a class="btn btn-secondary" href="/edit?person_id={{mother_data[0].mother_id}}">Edit</a></td>
                 </tr>
+                {% endif %}
             </table>
+            {% endif %}
             {% else %}
             <p>No data!</p>
             {% endif %}
