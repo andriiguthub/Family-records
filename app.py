@@ -215,3 +215,37 @@ def details():
         return render_template("details.html", person_data=person_data, father_data=father_data, mother_data=mother_data, child_data=child_data)
     else:
         return redirect("/tree")
+
+
+@app.route("/add_parent", methods=["GET", "POST"])
+#@login_required
+def add_parent():
+    if request.method == 'POST':
+        origin_person_id = request.form['person_id']
+        name = request.form['name']
+        lastname = request.form['lastname']
+        birth_date = request.form['birth_date']
+        birth_place = request.form['birth_place']
+        death_date = request.form['death_date']
+        death_place = request.form['death_place']
+        sex = request.form['sex']
+        try:
+            father_id = request.form['father_id']
+        except:
+            father_id = ""
+        try:
+            mother_id = request.form['mother_id']
+        except:
+            mother_id = ""
+                sql = f"INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES ('{name}', '{lastname}', '{birth_date}', '{birth_place}', '{death_date}', '{death_place}', '{sex}')"
+        db.executescript(sql)
+        person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND birth_place = ? AND death_date = ? AND death_place = ? AND sex = ? ORDER BY id DESC", [name, lastname, birth_date, birth_place, death_date, death_place, sex])
+        person_id = person.fetchone()
+        sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{mother_id}');"
+        db.executescript(sql)
+        print("add_parent")
+        return redirect("/tree")
+    else:
+        man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
+        woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female']).fetchall()
+        return render_template("add.html", man=man, woman=woman)
