@@ -89,10 +89,8 @@ def login():
         # Query database for username
         db.execute("SELECT id, username, hash FROM users WHERE username = ?", [username])
         rows = db.fetchall()
-        for row in rows:
-            u_id = row[0]
-            u_user = row[1]
-            u_hash = row[2]
+        u_id = rown['id']
+        u_hash = rows['hash']
 
         # Ensure username exists and password is correct
         if u_hash is None or not check_password_hash(u_hash, request.form.get("password")):
@@ -246,9 +244,9 @@ def add_parent():
         db.executescript(sql)
         print("add_parent")
         if sex == "male":
-            sql = f"INSERT INTO parent (person_id, father_id) VALUES ('{origin_person_id}', '{person_id}');"
+            sql = f"UPDATE parent SET father_id = '{person_id}' WHERE person_id = {origin_person_id};"
         if sex == "female":
-            sql = f"INSERT INTO parent (person_id, mother_id) VALUES ('{origin_person_id}', '{person_id}');"
+            sql = f"UPDATE parent SET mother_id = '{person_id}' WHERE person_id = {origin_person_id};"
         print("sql:", sql)
         db.executescript(sql)
         return redirect(f"/details?person_id={origin_person_id}")
