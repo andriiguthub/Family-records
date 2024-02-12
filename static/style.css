@@ -28,3 +28,15 @@
 .align-self-end {
     align-self: flex-end !important;
 }
+
+.parent {
+    justify-content: flex-start;
+}
+
+.person {
+    justify-content: center;
+}
+
+.children {
+    justify-content: flex-end;
+}
