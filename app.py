@@ -248,6 +248,7 @@ def add_parent():
             sql = f"INSERT INTO parent (person_id, father_id) VALUES ('{origin_person_id}', '{person_id}');"
         if sex == "female":
             sql = f"INSERT INTO parent (person_id, mother_id) VALUES ('{origin_person_id}', '{person_id}');"
+        print("sql:", sql)
         db.executescript(sql)
         return redirect(f"/details?person_id={origin_person_id}")
     else:
