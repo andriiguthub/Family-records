@@ -222,6 +222,7 @@ def details():
 def add_parent():
     if request.method == 'POST':
         origin_person_id = request.form['person_id']
+        print(origin_person_id)
         name = request.form['name']
         lastname = request.form['lastname']
         birth_date = request.form['birth_date']
