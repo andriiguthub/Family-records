@@ -158,7 +158,7 @@ def add():
         db.executescript(sql)
         if sex == "male":
             sql = f"INSERT INTO parent (person_id, father_id) VALUES ('{original_person_id}', '{person_id}');"
-        if sex == "female:
+        if sex == "female":
             sql = f"INSERT INTO parent (person_id, mother_id) VALUES ('{original_person_id}', '{person_id}');"
         db.executescript(sql)
         return redirect("/tree")
