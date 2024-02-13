@@ -30,7 +30,7 @@ Details
                 </tr>
                 {%if father_data is defined and father_data %}
                 <tr>
-                    <td><a class="btn btn-secondary" href="/details?person_id={{father_data.father_id}}">{{ father_data.name }}&nbsp;{{ father_data.lastname }}</a></td>
+                    <td><a class="btn btn-secondary man" href="/details?person_id={{father_data.father_id}}">{{ father_data.name }}&nbsp;{{ father_data.lastname }}</a></td>
                     <td>{{ father_data.sex }}</td>
                     <td>{{ father_data.birth_date }}</td>
                     <td>{{ father_data.birth_place }}</td>
@@ -42,7 +42,7 @@ Details
                 {% endif %}
                 {%if mother_data is defined and mother_data %}
                 <tr>
-                    <td><a class="btn btn-secondary" href="/details?person_id={{mother_data.mother_id}}">{{ mother_data.name }}&nbsp;{{ mother_data.lastname }}</a></td>
+                    <td><a class="btn btn-secondary woman" href="/details?person_id={{mother_data.mother_id}}">{{ mother_data.name }}&nbsp;{{ mother_data.lastname }}</a></td>
                     <td>{{ mother_data.sex }}</td>
                     <td>{{ mother_data.birth_date }}</td>
                     <td>{{ mother_data.birth_place }}</td>
@@ -109,7 +109,7 @@ Details
                 </tr>
                 {% for id in child_data %}
                 <tr>
-                    <td><a class="btn btn-secondary" href="/details?person_id={{id.person_id}}">{{ id.name }}&nbsp;{{ id.lastname }}</a></td>
+                    <td><a class="btn btn-secondary {% if id.sex == 'male' %}man{% endif %}{% if id.sex == 'female' %}woman{% endif %}" href="/details?person_id={{id.person_id}}">{{ id.name }}&nbsp;{{ id.lastname }}</a></td>
                     <td>{{ id.sex }}</td>
                     <td>{{ id.birth_date }}</td>
                     <td>{{ id.birth_place }}</td>
