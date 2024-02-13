@@ -40,3 +40,11 @@
 .children {
     justify-content: flex-end;
 }
+
+.man {
+    background-color: #347DC1;
+}
+
+.woman {
+    background-color: #CC6594;
+}
