@@ -158,7 +158,7 @@ def add():
     else:
         man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
         woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female']).fetchall()
-        return render_template("add.html", man=man, woman=woman, action="/add")
+        return render_template("add.html", man=man, woman=woman, action="add")
 
 
 @app.route("/edit", methods=["GET", "POST"])
@@ -252,6 +252,7 @@ def add_parent():
             print("ERROR!!!", error)
         return redirect(f"/details?person_id={origin_person_id}")
     else:
+        origin_person_id = request.form['person_id']
         man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
         woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female']).fetchall()
-        return render_template("add.html", man=man, woman=woman, action="/add_parent")
+        return render_template("add.html", man=man, woman=woman, action="/add_parent?person_id={origin_person_id}")
