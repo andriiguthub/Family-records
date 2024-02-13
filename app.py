@@ -158,7 +158,7 @@ def add():
     else:
         man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
         woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female']).fetchall()
-        return render_template("add.html", man=man, woman=woman)
+        return render_template("add.html", man=man, woman=woman, action="/add")
 
 
 @app.route("/edit", methods=["GET", "POST"])
@@ -254,4 +254,4 @@ def add_parent():
     else:
         man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
         woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female']).fetchall()
-        return render_template("add.html", man=man, woman=woman)
+        return render_template("add.html", man=man, woman=woman, action="/add_parent")
