@@ -10,7 +10,9 @@
             <a href="/tree" class="btn btn-secondary">HOME</a>
         </div>
     </header>
-    <form action="/add" method="post">
+    {% if action %}
+    <form action="action" method="post">
+    {% endif %}
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label for="name">Name</label>
@@ -69,6 +71,8 @@
                 </select>
             </div>
         </div>
+    {% if action %}
         <button class="btn btn-primary" type="submit">Add</button>
     </form>
+    {% endif %}
 {% endblock %}
