@@ -255,4 +255,4 @@ def add_parent():
         origin_person_id = request.args.get('person_id')
         man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
         woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female']).fetchall()
-        return render_template("add.html", man=man, woman=woman, action="/add_parent?person_id={origin_person_id}")
+        return render_template("add.html", man=man, woman=woman, action=f"add_parent?person_id={origin_person_id}")
