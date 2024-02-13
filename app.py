@@ -6,6 +6,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure application
 app = Flask(__name__)
+app.run(debug=True)
 
 # Configure login
 login_manager = LoginManager()
