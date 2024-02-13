@@ -18,20 +18,20 @@ Details
             {% if father_data or mother_data %}
             <table class="table table-striped">
                 <tr class="thead-light">
-                    <th>name</th>
-                    <!-- <th>lastname</th> -->
-                    <th>sex</th>
-                    <th>birthday date</th>
-                    <th>birthday place</th>
-                    <th>death date</th>
-                    <th>death place</th>
-                    <th></th>
-                    <th></th>
+                    <td>name</td>
+                    <!-- <td>lastname</td> -->
+                    <!-- <td>sex</td> -->
+                    <td>birthday date</td>
+                    <td>birthday place</td>
+                    <td>death date</td>
+                    <td>death place</td>
+                    <td></td>
+                    <td></td>
                 </tr>
                 {%if father_data is defined and father_data %}
                 <tr>
                     <td><a class="btn btn-secondary man" href="/details?person_id={{father_data.father_id}}">{{ father_data.name }}&nbsp;{{ father_data.lastname }}</a></td>
-                    <td>{{ father_data.sex }}</td>
+                    <!-- <td>{{ father_data.sex }}</td> -->
                     <td>{{ father_data.birth_date }}</td>
                     <td>{{ father_data.birth_place }}</td>
                     <td>{{ father_data.death_date }}</td>
@@ -43,7 +43,7 @@ Details
                 {%if mother_data is defined and mother_data %}
                 <tr>
                     <td><a class="btn btn-secondary woman" href="/details?person_id={{mother_data.mother_id}}">{{ mother_data.name }}&nbsp;{{ mother_data.lastname }}</a></td>
-                    <td>{{ mother_data.sex }}</td>
+                    <!-- <td>{{ mother_data.sex }}</td> -->
                     <td>{{ mother_data.birth_date }}</td>
                     <td>{{ mother_data.birth_place }}</td>
                     <td>{{ mother_data.death_date }}</td>
@@ -67,19 +67,18 @@ Details
             person:<br />{%if person_data is defined and person_data %}
             <table class="table table-striped">
                 <tr class="thead-light">
-                    <th>name</th>
-                    <th>lastname</th>
-                    <th>sex</th>
-                    <th>birthday date</th>
-                    <th>birthday place</th>
-                    <th>death date</th>
-                    <th>death place</th>
-                    <th></th>
+                    <td>name</td>
+                    <!-- <td>lastname</td> -->
+                    <!-- <td>sex</td> -->
+                    <td>birthday date</td>
+                    <td>birthday place</td>
+                    <td>death date</td>
+                    <td>death place</td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td>{{ person_data.name }}</td>
-                    <td>{{ person_data.lastname }}</td>
-                    <td>{{ person_data.sex }}</td>
+                    <td class="{% if person_data.sex == 'male' %}man{% endif %}{% if person_data.sex == 'female' %}woman{% endif %}">{{ person_data.name }} {{ person_data.lastname }}</td>
+                    <!-- <td>{{ person_data.sex }}</td> -->
                     <td>{{ person_data.birth_date }}</td>
                     <td>{{ person_data.birth_place }}</td>
                     <td>{{ person_data.death_date }}</td>
@@ -97,20 +96,20 @@ Details
             {%if child_data is defined and child_data %}
             <table class="table table-striped">
                 <tr class="thead-light">
-                    <th>name</th>
-                    <!-- <th>lastname</th> -->
-                    <th>sex</th>
-                    <th>birthday date</th>
-                    <th>birthday place</th>
-                    <th>death date</th>
-                    <th>death place</th>
-                    <th></th>
-                    <th></th>
+                    <td>name</td>
+                    <!-- <td>lastname</td> -->
+                    <!-- <td>sex</td> -->
+                    <td>birthday date</td>
+                    <td>birthday place</td>
+                    <td>death date</td>
+                    <td>death place</td>
+                    <td></td>
+                    <td></td>
                 </tr>
                 {% for id in child_data %}
                 <tr>
                     <td><a class="btn btn-secondary {% if id.sex == 'male' %}man{% endif %}{% if id.sex == 'female' %}woman{% endif %}" href="/details?person_id={{id.person_id}}">{{ id.name }}&nbsp;{{ id.lastname }}</a></td>
-                    <td>{{ id.sex }}</td>
+                    <!-- <td>{{ id.sex }}</td> -->
                     <td>{{ id.birth_date }}</td>
                     <td>{{ id.birth_place }}</td>
                     <td>{{ id.death_date }}</td>
@@ -123,9 +122,9 @@ Details
             {% else %}
             <p>No data!</p>
             {% endif %}
-            {% if not child_data %}
+            <!--  if not child_data  -->
             <p><a href="/add_child?person_id={{person_data.id}}">Add child</a></p>
-            {% endif %}
+            <!--  endif  -->
         </div>
     </div>
 </div>

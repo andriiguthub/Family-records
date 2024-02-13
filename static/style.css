@@ -42,9 +42,9 @@
 }
 
 .man {
-    background-color: #347DC1;
+    background-color: #347DC1 !important;
 }
 
 .woman {
-    background-color: #CC6594;
+    background-color: #CC6594 !important;
 }
