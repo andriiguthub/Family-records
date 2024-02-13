@@ -12,6 +12,7 @@
     </header>
     {% if action %}
     <form action="/{{ action }}" method="post">
+        <input type="hidden" name="origin_person_id" value="{{ origin_person_id }}">
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label for="name">Name</label>

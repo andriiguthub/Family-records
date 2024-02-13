@@ -62,7 +62,7 @@ def register():
             return render_template("login.html", error="Password should be equal to Password confirmation!")
         else:
             password_hash = generate_password_hash(password)
-            sql = "INSERT INTO users (username, hash) VALUES ('{username}', '{password_hash}');"
+            sql = f"INSERT INTO users (username, hash) VALUES ('{username}', '{password_hash}');"
             db.executescript(sql)
             return render_template("login.html")
     else:
@@ -87,9 +87,8 @@ def login():
         username = request.form.get("username")
 
         # Query database for username
-        db.execute("SELECT id, username, hash FROM users WHERE username = ?", [username])
-        rows = db.fetchall()
-        u_id = rown['id']
+        rows = db.execute("SELECT * FROM users WHERE username = ?", [username]).fetchone()
+        u_id = rows['id']
         u_hash = rows['hash']
 
         # Ensure username exists and password is correct
@@ -206,9 +205,9 @@ def edit():
 def details():
     person_id = request.args.get('person_id')
     if not len(person_id) == 0 or not person_id == None:
-        person_data = db.execute("SELECT * FROM person WHERE id = ?", [person_id]).fetchall()
-        father_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.father_id WHERE parent.person_id = ?", [person_id]).fetchall()
-        mother_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.mother_id WHERE parent.person_id = ?", [person_id]).fetchall()
+        person_data = db.execute("SELECT * FROM person WHERE id = ?", [person_id]).fetchone()
+        father_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.father_id WHERE parent.person_id = ?", [person_id]).fetchone()
+        mother_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.mother_id WHERE parent.person_id = ?", [person_id]).fetchone()
         child_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.person_id WHERE parent.father_id = ? OR parent.mother_id = ?", [person_id, person_id]).fetchall()
         return render_template("details.html", person_data=person_data, father_data=father_data, mother_data=mother_data, child_data=child_data)
     else:
@@ -219,40 +218,44 @@ def details():
 #@login_required
 def add_parent():
     if request.method == 'POST':
-        origin_person_id = request.form['person_id']
-        print(origin_person_id)
-        name = request.form['name']
-        lastname = request.form['lastname']
-        birth_date = request.form['birth_date']
-        birth_place = request.form['birth_place']
-        death_date = request.form['death_date']
-        death_place = request.form['death_place']
-        sex = request.form['sex']
         try:
-            father_id = request.form['father_id']
-        except:
-            father_id = ""
-        try:
-            mother_id = request.form['mother_id']
-        except:
-            mother_id = ""
-        sql = f"INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES ('{name}', '{lastname}', '{birth_date}', '{birth_place}', '{death_date}', '{death_place}', '{sex}');"
-        db.executescript(sql)
-        person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND birth_place = ? AND death_date = ? AND death_place = ? AND sex = ? ORDER BY id DESC", [name, lastname, birth_date, birth_place, death_date, death_place, sex])
-        person_id = person.fetchone()
-        sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{mother_id}');"
-        db.executescript(sql)
-        try:
-            if sex == "male":
-                sql = f"UPDATE parent SET father_id = '{person_id}' WHERE person_id = {origin_person_id};"
-            if sex == "female":
-                sql = f"UPDATE parent SET mother_id = '{person_id}' WHERE person_id = {origin_person_id};"
+            origin_person_id = request.form['origin_person_id']
+            print(origin_person_id)
+            name = request.form['name']
+            lastname = request.form['lastname']
+            birth_date = request.form['birth_date']
+            birth_place = request.form['birth_place']
+            death_date = request.form['death_date']
+            death_place = request.form['death_place']
+            sex = request.form['sex']
+            try:
+                father_id = request.form['father_id']
+            except:
+                father_id = ""
+            try:
+                mother_id = request.form['mother_id']
+            except:
+                mother_id = ""
+            sql = f"INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES ('{name}', '{lastname}', '{birth_date}', '{birth_place}', '{death_date}', '{death_place}', '{sex}');"
             db.executescript(sql)
+            person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND birth_place = ? AND death_date = ? AND death_place = ? AND sex = ? ORDER BY id DESC", [name, lastname, birth_date, birth_place, death_date, death_place, sex])
+            person_id = person.fetchone()['id']
+            print(person_id)
+            sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{mother_id}');"
+            db.executescript(sql)
+            try:
+                if sex == "male":
+                    sql = f"UPDATE parent SET father_id = '{person_id}' WHERE person_id = {origin_person_id};"
+                if sex == "female":
+                    sql = f"UPDATE parent SET mother_id = '{person_id}' WHERE person_id = {origin_person_id};"
+                db.executescript(sql)
+            except Exception as error:
+                print("ERROR!!!", error)
+            return redirect(f"/details?person_id={origin_person_id}")
         except Exception as error:
-            print("ERROR!!!", error)
-        return redirect(f"/details?person_id={origin_person_id}")
+            print("ERRROR!!!", error)
     else:
         origin_person_id = request.args.get('person_id')
         man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
         woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female']).fetchall()
-        return render_template("add.html", man=man, woman=woman, action=f"add_parent?person_id={origin_person_id}")
+        return render_template("add.html", man=man, woman=woman, origin_person_id=origin_person_id, action=f"add_parent?person_id={origin_person_id}")
