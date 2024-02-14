@@ -58,7 +58,7 @@ Details
             <p>No data!</p>
             {% endif %}
             {% if not father_data or not mother_data %}
-            <p><a href="/add_parent?person_id={{person_data.id}}">Add parent</a></p>
+            <p><a href="/add_parent?person_id={{person_data.id}}">Add parent (new)</a></p>
             {% endif %}
         </div>
     </div>
@@ -85,6 +85,22 @@ Details
                     <td>{{ person_data.death_place }}</td>
                     <td><a class="btn btn-secondary" href="/edit?person_id={{person_data.id}}">Edit</a></td>
                 </tr>
+            </table>
+            <p><a class="" href="/add_spouse?person_id={{person_data.id}}">Add spouse (search)</a></p>
+            {% endif %}
+            {% if spouse_data %}
+            spouse:
+                <table>
+                {% for spouse in spouse_data %}
+                <tr>
+                    <td class="{% if spouse.sex == 'male' %}man{% endif %}{% if spouse.sex == 'female' %}woman{% endif %}">{{ spouse.name }} {{ spouse.lastname }}</td>
+                    <td>&#xF6E0;&nbsp;{{ spouse.birth_date }}</td>
+                    <td>{{ spouse.birth_place }}</td>
+                    <td>&#xF3CD;&nbsp;{{ spouse.death_date }}</td>
+                    <td>{{ spouse.death_place }}</td>
+                    <td><a class="btn btn-secondary" href="/edit?person_id={{spouse.id}}">Edit</a></td>
+                </tr>
+                {% endfor %}
             </table>
             {% endif %}
         </div>
@@ -123,7 +139,7 @@ Details
             <p>No data!</p>
             {% endif %}
             <!--  if not child_data  -->
-            <p><a href="/add_child?person_id={{person_data.id}}">Add child</a></p>
+            <p><a href="/add_child?person_id={{person_data.id}}">Add child (new)</a></p>
             <!--  endif  -->
         </div>
     </div>

@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Add spouse
+{% endblock %}
+
+{% block main %}
+    <header class="navbar">
+        <div>
+            <a href="/tree" class="btn btn-secondary">HOME</a>
+        </div>
+    </header>
+    {% if action %}
+    <form action="/{{ action }}" method="post">
+        <input type="hidden" name="origin_person_id" value="{{ origin_person_id }}">
+        <div class="form-row">
+            <div class="form-group col-md-auto">
+                <label for="spouse">Spouse</label>
+                <select class="form-select" name="spouse" id="spouse">
+                    <option value="" selected>Select spouse</option>
+                    {% if people %}
+                        {% for human in people %}
+                            <option value="{{ human.id }}">{{ human.name }} {{ human.lastname }} ({{ human.birth_date }})</option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-auto">
+                <label for="on_marriage_date">Birth date</label>
+                <input class="form-control" name="on_marriage_date" id="on_marriage_date" placeholder="on_marriage_date" type="date">
+            </div>
+            <div class="form-group col-md-auto">
+                <label for="off_marriage_date">Death date</label>
+                <input class="form-control" name="off_marriage_date" id="off_marriage_date" placeholder="off_marriage_date" type="date">
+            </div>
+        </div>
+        <button class="btn btn-primary" type="submit">Add spouse</button>
+    </form>
+    {% endif %}
+{% endblock %}

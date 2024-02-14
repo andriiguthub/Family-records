@@ -206,10 +206,11 @@ def details():
     person_id = request.args.get('person_id')
     if not len(person_id) == 0 or not person_id == None:
         person_data = db.execute("SELECT * FROM person WHERE id = ?", [person_id]).fetchone()
+        spouse_data = db.execute("SELECT * FROM person WHERE person.id IN (SELECT spouse.spouse_id from spouse WHERE person_id = ?);", [person_id]).fetchall()
         father_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.father_id WHERE parent.person_id = ?", [person_id]).fetchone()
         mother_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.mother_id WHERE parent.person_id = ?", [person_id]).fetchone()
         child_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.person_id WHERE parent.father_id = ? OR parent.mother_id = ?", [person_id, person_id]).fetchall()
-        return render_template("details.html", person_data=person_data, father_data=father_data, mother_data=mother_data, child_data=child_data)
+        return render_template("details.html", person_data=person_data, spouse_data=spouse_data, father_data=father_data, mother_data=mother_data, child_data=child_data)
     else:
         return redirect("/tree")
 
@@ -309,3 +310,24 @@ def add_child():
         man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
         woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female']).fetchall()
         return render_template("add.html", father=father, mother=mother, man=man, woman=woman, origin_person_id=origin_person_id, action=f"add_child?person_id={origin_person_id}")
+
+@app.route("/add_spouse", methods=["GET", "POST"])
+#@login_required
+def add_spouse():
+    if request.method == 'POST':
+        try:
+            origin_person_id = request.form['origin_person_id']
+            spouse = request.form['spouse']
+            on_marriage_date = request.form['on_marriage_date']
+            off_marriage_date = request.form['off_marriage_date']
+            sql = f"INSERT INTO spouse (person_id, spouse_id, on_date, off_date) VALUES ('{origin_person_id}', '{spouse}', '{on_marriage_date}', '{off_marriage_date}');"
+            db.executescript(sql)
+            sql = f"INSERT INTO spouse (spouse_id, person_id, on_date, off_date) VALUES ('{origin_person_id}', '{spouse}', '{on_marriage_date}', '{off_marriage_date}');"
+            db.executescript(sql)
+            return redirect(f"/details?person_id={origin_person_id}")
+        except Exception as error:
+            print("ERRROR!!!", error)
+    else:
+        origin_person_id = request.args.get('person_id')
+        people = db.execute("SELECT * FROM person").fetchall()
+        return render_template("add_spouse.html", people=people, origin_person_id=origin_person_id, action=f"add_spouse?person_id={origin_person_id}")
