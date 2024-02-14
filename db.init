@@ -1,3 +1,4 @@
 CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, username TEXT NOT NULL, hash TEXT NOT NULL);
 CREATE TABLE person (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,name TEXT,middlename TEXT, lastname TEXT, birth_date TEXT, birth_place TEXT, death_date TEXT, death_place TEXT, sex TEXT);
 CREATE TABLE parent (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, person_id INT NOT NULL, father_id INT NULL, mother_id INT NULL, FOREIGN KEY (father_id) REFERENCES person(id), FOREIGN KEY (mother_id) REFERENCES person(id));
+CREATE TABLE spouse (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, person_id INT NOT NULL, spouse_id INT NULL, FOREIGN KEY (person_id) REFERENCES person(id), FOREIGN KEY (spouse_id) REFERENCES person(id));
