@@ -1,11 +1,20 @@
 import sqlite3
 from flask import Flask, redirect, render_template, request, session
+from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
+# init SQLAlchemy so we can use it later in our models
+db = SQLAlchemy()
+
 # Configure application
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = 'secret-key-goes-here'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+
+db.init_app(app)
 
 # Configure login
 login_manager = LoginManager()
