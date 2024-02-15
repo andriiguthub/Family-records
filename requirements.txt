@@ -1,5 +1,4 @@
 Flask
-Flask-Session
 flask-login
 flask-sqlalchemy
 requests

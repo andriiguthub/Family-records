@@ -1,38 +1,38 @@
 import sqlite3
 from flask import Flask, redirect, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_required
-from flask_session import Session
+from flask_login import LoginManager, login_required, UserMixin, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
-# init SQLAlchemy so we can use it later in our models
-db = SQLAlchemy()
+
 
 # Configure application
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'secret-key-goes-here'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+# init SQLAlchemy so we can use it later in our models
+app.config['SECRET_KEY'] = '9E3M3wqAM7yIFIEI00BYA2xyKxVDoy6wNMPc9L4e'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:/Family-records-main/familytree.db'
+udb = SQLAlchemy(app)
 
-db.init_app(app)
+class users(UserMixin, udb.Model):
+    id = udb.Column(udb.Integer, primary_key=True)
+    username = udb.Column(udb.String(80), unique=True, nullable=False)
+    hash = udb.Column(udb.String(120), unique=True, nullable=False)
+
+    def __repr__(self):
+        return '<User %r>' % self.username
+
 
 # Configure login
 login_manager = LoginManager()
+login_manager.login_view = 'login'
 login_manager.init_app(app)
-
 
 @login_manager.user_loader
 def load_user(user_id):
-    # return User.get(user_id)
-    return None
+    return users.query.get(int(user_id))
 
-
-# Configure session to use filesystem (instead of signed cookies)
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
-
-# Configure to use SQLite database
+#Configure to use SQLite database
 con = sqlite3.connect("familytree.db", check_same_thread=False)
 con.row_factory = sqlite3.Row
 db = con.cursor()
@@ -40,7 +40,6 @@ db = con.cursor()
 
 @app.after_request
 def after_request(response):
-    """Ensure responses aren't cached"""
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
@@ -58,8 +57,11 @@ def register():
         username = request.form['username']
         password = request.form['password']
         confirmation = request.form['confirmation']
-        check_username = db.execute("SELECT username FROM users WHERE username = ?", [username])
-        if not check_username.fetchone() is None:
+        code = request.form['code']
+        if not code == '2dWaE2HLLpPG6L84Raqvi5pcFxglyQIDzTRFQc1l':
+           return redirect("/register") 
+        user = users.query.filter_by(username=username).first()
+        if user:
             return render_template("login.html", error="Unique name is required!")
         if not username:
             return render_template("login.html", error="Name is required!")
@@ -70,46 +72,31 @@ def register():
         elif not password == confirmation:
             return render_template("login.html", error="Password should be equal to Password confirmation!")
         else:
-            password_hash = generate_password_hash(password)
-            sql = f"INSERT INTO users (username, hash) VALUES ('{username}', '{password_hash}');"
-            db.executescript(sql)
-            return render_template("login.html")
+            new_user = users(username=username, hash=generate_password_hash(password))
+            udb.session.add(new_user)
+            udb.session.commit()
+            return render_template("login.html",  error="Registration successfull!")
     else:
         return render_template("register.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    """Log user in"""
-
-    # Forget any user_id
-    session.clear()
-
-    # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         # Ensure username was submitted
         if not request.form.get("username"):
-            return apology("must provide username", 403)
+            return render_template("login.html", error="Name is required!")
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return apology("must provide password", 403)
+            return render_template("login.html", error="Password is required!")
         username = request.form.get("username")
-
-        # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = ?", [username]).fetchone()
-        u_id = rows['id']
-        u_hash = rows['hash']
-
-        # Ensure username exists and password is correct
-        if u_hash is None or not check_password_hash(u_hash, request.form.get("password")):
+        password = request.form.get('password')
+        user = users.query.filter_by(username=username).first()
+        if not user or not check_password_hash(user.hash, password):
             return render_template("login.html", error="invalid username and/or password")
-
-        # Remember which user has logged in
-        session["user_id"] = u_id
-
         # Redirect user to home page
+        login_user(user)
         return redirect("/tree")
-
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("login.html")
@@ -117,13 +104,12 @@ def login():
 
 @app.route("/logout")
 def logout():
-    con.close()
-    session.clear()
+    logout_user()
     return redirect("/")
 
 
 @app.route("/tree", methods=["GET", "POST"])
-# @login_required
+@login_required
 def tree():
     if request.method == 'POST':
         search = request.form['search']
@@ -138,7 +124,7 @@ def tree():
 
 
 @app.route("/add", methods=["GET", "POST"])
-# @login_required
+@login_required
 def add():
     if request.method == 'POST':
         name = request.form['name']
@@ -170,12 +156,11 @@ def add():
 
 
 @app.route("/edit", methods=["GET", "POST"])
-# @login_required
+@login_required
 def edit():
     if request.method == 'POST':
         person_id = request.form['person_id']
         name = request.form['name']
-        # middlename = request.form['middlename']
         lastname = request.form['lastname']
         birth_date = request.form['birth_date']
         birth_place = request.form['birth_place']
@@ -210,7 +195,7 @@ def edit():
 
 
 @app.route("/details")
-# @login_required
+@login_required
 def details():
     person_id = request.args.get('person_id')
     if not len(person_id) == 0 or not person_id == None:
@@ -225,7 +210,7 @@ def details():
 
 
 @app.route("/add_parent", methods=["GET", "POST"])
-#@login_required
+@login_required
 def add_parent():
     if request.method == 'POST':
         try:
@@ -270,7 +255,7 @@ def add_parent():
         return render_template("add.html", man=man, woman=woman, origin_person_id=origin_person_id, action=f"add_parent?person_id={origin_person_id}")
 
 @app.route("/add_child", methods=["GET", "POST"])
-#@login_required
+@login_required
 def add_child():
     if request.method == 'POST':
         try:
@@ -321,7 +306,7 @@ def add_child():
         return render_template("add.html", father=father, mother=mother, man=man, woman=woman, origin_person_id=origin_person_id, action=f"add_child?person_id={origin_person_id}")
 
 @app.route("/add_spouse", methods=["GET", "POST"])
-#@login_required
+@login_required
 def add_spouse():
     if request.method == 'POST':
         try:
