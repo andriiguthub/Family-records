@@ -3,7 +3,7 @@ from flask import Flask, redirect, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, UserMixin, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
-
+import os
 
 
 # Configure application
@@ -11,7 +11,9 @@ app = Flask(__name__)
 
 # init SQLAlchemy so we can use it later in our models
 app.config['SECRET_KEY'] = '9E3M3wqAM7yIFIEI00BYA2xyKxVDoy6wNMPc9L4e'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:/Family-records-main/familytree.db'
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'familytree.db')
 udb = SQLAlchemy(app)
 
 class users(UserMixin, udb.Model):
