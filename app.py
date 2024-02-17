@@ -323,6 +323,7 @@ def add_spouse():
             return redirect(f"/details?person_id={origin_person_id}")
         except Exception as error:
             print("ERRROR!!!", error)
+            return redirect(f"/details?person_id={origin_person_id}")
     else:
         origin_person_id = request.args.get('person_id')
         people = db.execute("SELECT * FROM person").fetchall()
