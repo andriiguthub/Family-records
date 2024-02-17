@@ -65,29 +65,14 @@ Details
     <div class="row person">
         <div class="col-md-auto">
             person:<br />{%if person_data is defined and person_data %}
-            <table class="table table-striped">
-                <tr class="thead-light">
-                    <td>name</td>
-                    <!-- <td>lastname</td> -->
-                    <!-- <td>sex</td> -->
-                    <td>birthday date</td>
-                    <td>birthday place</td>
-                    <td>death date</td>
-                    <td>death place</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="{% if person_data.sex == 'male' %}man{% endif %}{% if person_data.sex == 'female' %}woman{% endif %}">{{ person_data.name }} {{ person_data.lastname }}</td>
-                    <!-- <td>{{ person_data.sex }}</td> -->
-                    <td><div class="born"></div>{{ person_data.birth_date }}</td>
-                    <td>{{ person_data.birth_place }}</td>
-                    <td><div class="dead"></div>{{ person_data.death_date }}</td>
-                    <td>{{ person_data.death_place }}</td>
-                    <td><a class="btn btn-secondary" href="/edit?person_id={{person_data.id}}">Edit</a></td>
-                </tr>
-            </table>
+            <div>
+                <div class="{% if person_data.sex == 'male' %}man{% endif %}{% if person_data.sex == 'female' %}woman{% endif %}">{{ person_data.name }} {{ person_data.lastname }}</div>
+                    <div class="born"></div>{{ person_data.birth_date }} ({{ person_data.birth_place }})
+                    <div class="dead"></div>{{ person_data.death_date }} ({{ person_data.death_place }})</td>
+                    <a class="btn btn-secondary" href="/edit?person_id={{person_data.id}}">Edit</a>
             <p><a class="" href="/add_spouse?person_id={{person_data.id}}">Add spouse (search)</a></p>
             {% endif %}
+            </div>
             {% if spouse_data %}
             spouse:
                 <table>
