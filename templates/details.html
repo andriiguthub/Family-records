@@ -65,12 +65,33 @@ Details
     <div class="row person">
         <div class="col-md-auto">
             person:<br />{%if person_data is defined and person_data %}
-            <div>
-                <div class="{% if person_data.sex == 'male' %}man{% endif %}{% if person_data.sex == 'female' %}woman{% endif %}">{{ person_data.name }} {{ person_data.lastname }}</div>
-                    <div class="born"></div>{{ person_data.birth_date }} ({{ person_data.birth_place }})
-                    <div class="dead"></div>{{ person_data.death_date }} ({{ person_data.death_place }})</td>
+            <div class="row">
+                <div class="{% if person_data.sex == 'male' %}man{% endif %}{% if person_data.sex == 'female' %}woman{% endif %}">
+                    {{ person_data.name }} {{ person_data.lastname }}
+                </div>
+                <div>
                     <a class="btn btn-secondary" href="/edit?person_id={{person_data.id}}">Edit</a>
-            <p><a class="" href="/add_spouse?person_id={{person_data.id}}">Add spouse (search)</a></p>
+                </div>
+            </div>
+            {% if person_data.birth_date or person_data.birth_place%}
+            <div class="row">
+                <div class="born"></div>
+                <div>
+                    {{ person_data.birth_date }}{% if person_data.birth_place %} ({{ person_data.birth_place }}){% endif %}
+                </div>
+            </div>
+            {% endif %}
+            {% if person_data.death_date or person_data.death_place%}
+            <div class="row">
+                <div class="dead"></div>
+                <div>
+                    {{ person_data.death_date }}{% if person_data.death_place %} ({{ person_data.death_place }}){% endif %}
+                </div>
+            </div>    
+            {% endif %}
+            <div class="row">
+                <a class="" href="/add_spouse?person_id={{person_data.id}}">Add spouse (search)</a>
+            </div>
             {% endif %}
             </div>
             {% if spouse_data %}
