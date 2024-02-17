@@ -56,3 +56,16 @@ body {
 .woman {
     background-color: #CC6594 !important;
 }
+
+.born, .dead {
+  height: 24px;
+  width: 24px;
+}
+
+.born {
+  background-image: url(/static/baby.svg);
+}
+
+.dead {
+  background-image: url(/static/dead.svg);
+}
