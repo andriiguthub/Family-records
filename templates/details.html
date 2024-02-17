@@ -79,10 +79,10 @@ Details
                 <tr>
                     <td class="{% if person_data.sex == 'male' %}man{% endif %}{% if person_data.sex == 'female' %}woman{% endif %}">{{ person_data.name }} {{ person_data.lastname }}</td>
                     <!-- <td>{{ person_data.sex }}</td> -->
-                    <td>&#xF6E0;&nbsp;{{ person_data.birth_date }}</td>
+                    <td><div class="born"></div>{{ person_data.birth_date }}</td>
                     <td>{{ person_data.birth_place }}</td>
                     <td>&#xF3CD;&nbsp;{{ person_data.death_date }}</td>
-                    <td>{{ person_data.death_place }}</td>
+                    <td><div class="dead"></div>{{ person_data.death_place }}</td>
                     <td><a class="btn btn-secondary" href="/edit?person_id={{person_data.id}}">Edit</a></td>
                 </tr>
             </table>
