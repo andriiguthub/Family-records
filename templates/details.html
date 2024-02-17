@@ -67,16 +67,13 @@ Details
             person:<br />{%if person_data is defined and person_data %}
             <div class="row">
                 <div class="{% if person_data.sex == 'male' %}man{% endif %}{% if person_data.sex == 'female' %}woman{% endif %}">
-                    {{ person_data.name }} {{ person_data.lastname }}
-                </div>
-                <div>
-                    <a class="btn btn-secondary" href="/edit?person_id={{person_data.id}}">Edit</a>
+                    {{ person_data.name }} {{ person_data.lastname }} <a class="btn btn-secondary" href="/edit?person_id={{person_data.id}}">Edit</a>
                 </div>
             </div>
             {% if person_data.birth_date or person_data.birth_place%}
             <div class="row">
                 <div class="born"></div>
-                <div>
+                <div class="col">
                     {{ person_data.birth_date }}{% if person_data.birth_place %} ({{ person_data.birth_place }}){% endif %}
                 </div>
             </div>
@@ -84,7 +81,7 @@ Details
             {% if person_data.death_date or person_data.death_place%}
             <div class="row">
                 <div class="dead"></div>
-                <div>
+                <div class="col">
                     {{ person_data.death_date }}{% if person_data.death_place %} ({{ person_data.death_place }}){% endif %}
                 </div>
             </div>    
