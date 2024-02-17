@@ -247,14 +247,14 @@ def add_parent():
                     sql = f"UPDATE parent SET mother_id = '{person_id}' WHERE person_id = {origin_person_id};"
                 db.executescript(sql)
             except Exception as error:
-                print("ERROR!!!", error)
+                print("SQL ERROR!!!", error)
             return redirect(f"/details?person_id={origin_person_id}")
         except Exception as error:
-            print("ERRROR!!!", error)
+            print("TRY ERRROR!!!", error)
     else:
         origin_person_id = request.args.get('person_id')
-        man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
-        woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female']).fetchall()
+        man = db.execute("SELECT * FROM person WHERE sex = ? AND id != ?", ['male', origin_person_id]).fetchall()
+        woman = db.execute("SELECT * FROM person WHERE sex = ? AND id != ?", ['female', origin_person_id]).fetchall()
         return render_template("add.html", man=man, woman=woman, origin_person_id=origin_person_id, action=f"add_parent?person_id={origin_person_id}")
 
 @app.route("/add_child", methods=["GET", "POST"])
@@ -285,16 +285,16 @@ def add_child():
             sql = f"SELECT sex FROM person where id = '{origin_person_id}';"
             parent_sex = db.execute(sql).fetchone()['sex']
             if parent_sex == "male":
-                sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{origin_person_id}', '{mother_id}'');"
+                sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{origin_person_id}', '{mother_id}');"
             if parent_sex == "female":
                 sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{origin_person_id}');"
             try:
                 db.executescript(sql)
             except Exception as error:
-                print("ERROR!!!", error)
+                print("SQL ERROR!!!", error)
             return redirect(f"/details?person_id={origin_person_id}")
         except Exception as error:
-            print("ERRROR!!!", error)
+            print("TRY ERRROR!!!", error)
     else:
         origin_person_id = request.args.get('person_id')
         origin_person_sex = db.execute("SELECT sex FROM person WHERE id = ?", [origin_person_id]).fetchone()['sex']
@@ -327,5 +327,5 @@ def add_spouse():
             return redirect(f"/details?person_id={origin_person_id}")
     else:
         origin_person_id = request.args.get('person_id')
-        people = db.execute("SELECT * FROM person").fetchall()
+        people = db.execute("SELECT * FROM person WHERE id !=?",[origin_person_id]).fetchall()
         return render_template("add_spouse.html", people=people, origin_person_id=origin_person_id, action=f"add_spouse?person_id={origin_person_id}")
