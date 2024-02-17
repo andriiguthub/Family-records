@@ -60,19 +60,20 @@ def register():
         password = request.form['password']
         confirmation = request.form['confirmation']
         code = request.form['code']
-        if not code == '2dWaE2HLLpPG6L84Raqvi5pcFxglyQIDzTRFQc1l':
-           return redirect("/register") 
         user = users.query.filter_by(username=username).first()
         if user:
-            return render_template("login.html", error="Unique name is required!")
+            return render_template("register.html", error="Unique name is required!")
         if not username:
-            return render_template("login.html", error="Name is required!")
+            return render_template("register.html", error="Name is required!")
         elif not password:
-            return render_template("login.html", error="Password is required!")
+            return render_template("register.html", error="Password is required!")
         elif not confirmation:
-            return render_template("login.html", error="Password confirmation is required!")
+            return render_template("register.html", error="Password confirmation is required!")
         elif not password == confirmation:
-            return render_template("login.html", error="Password should be equal to Password confirmation!")
+            return render_template("register.html", error="Password should be equal to Password confirmation!")
+        if not code == '2dWaE2HLLpPG6L84Raqvi5pcFxglyQIDzTRFQc1l':
+            return render_template("register.html", error="Incorrect 2FA code, check your messages and try again!") 
+
         else:
             new_user = users(username=username, hash=generate_password_hash(password))
             udb.session.add(new_user)
