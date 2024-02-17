@@ -314,11 +314,11 @@ def add_spouse():
         try:
             origin_person_id = request.form['origin_person_id']
             spouse = request.form['spouse']
-            on_marriage_date = request.form['on_marriage_date']
-            off_marriage_date = request.form['off_marriage_date']
-            sql = f"INSERT INTO spouse (person_id, spouse_id, on_date, off_date) VALUES ('{origin_person_id}', '{spouse}', '{on_marriage_date}', '{off_marriage_date}');"
+            marriage_date = request.form['marriage_date']
+            divorce_date = request.form['divorce_date']
+            sql = f"INSERT INTO spouse (person_id, spouse_id, on_date, off_date) VALUES ('{origin_person_id}', '{spouse}', '{marriage_date}', '{divorce_date}');"
             db.executescript(sql)
-            sql = f"INSERT INTO spouse (person_id, spouse_id, on_date, off_date) VALUES ('{spouse}', '{origin_person_id}', '{on_marriage_date}', '{off_marriage_date}');"
+            sql = f"INSERT INTO spouse (person_id, spouse_id, on_date, off_date) VALUES ('{spouse}', '{origin_person_id}', '{marriage_date}', '{divorce_date}');"
             db.executescript(sql)
             return redirect(f"/details?person_id={origin_person_id}")
         except Exception as error:
