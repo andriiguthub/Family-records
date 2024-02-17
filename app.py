@@ -102,6 +102,9 @@ def login():
         return redirect("/tree")
     # User reached route via GET (as by clicking a link or via redirect)
     else:
+        user = db.execute("SELECT * FROM users").fetchall()
+        if not_user:
+            return render_template("register.html", error="Create user!")
         return render_template("login.html")
 
 
