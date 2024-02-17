@@ -60,6 +60,7 @@ body {
 .born, .dead {
   height: 24px;
   width: 24px;
+  background-size: contain;
 }
 
 .born {
