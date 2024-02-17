@@ -45,6 +45,10 @@ body {
     justify-content: flex-end;
 }
 
+.man, .woman {
+    color: white !important;
+}
+
 .man {
     background-color: #347DC1 !important;
 }

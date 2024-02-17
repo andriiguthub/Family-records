@@ -93,7 +93,7 @@ Details
                 <table>
                 {% for spouse in spouse_data %}
                 <tr>
-                    <td class="{% if spouse.sex == 'male' %}man{% endif %}{% if spouse.sex == 'female' %}woman{% endif %}">{{ spouse.name }} {{ spouse.lastname }}</td>
+                    <td><a class="btn btn-secondary {% if spouse.sex == 'male' %}man{% endif %}{% if spouse.sex == 'female' %}woman{% endif %}" href="/details?person_id={{spouse.id}}">{{ spouse.name }} {{ spouse.lastname }}</a></td>
                     <td>&#xF6E0;&nbsp;{{ spouse.birth_date }}</td>
                     <td>{{ spouse.birth_place }}</td>
                     <td>&#xF3CD;&nbsp;{{ spouse.death_date }}</td>
