@@ -1,7 +1,7 @@
 import sqlite3
 from flask import Flask, redirect, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_required, UserMixin, login_user, logout_user
+from flask_login import LoginManager, login_required, UserMixin, login_user, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 import os
 
@@ -50,7 +50,10 @@ def after_request(response):
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    if current_user.is_authenticated:
+        return redirect("/tree")
+    else:
+        return render_template("index.html")
 
 
 @app.route("/register", methods=["GET", "POST"])
