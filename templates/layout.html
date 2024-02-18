@@ -33,6 +33,12 @@
                 {% endif %}
                 {% if current_user.is_authenticated %}
                 <div class="home"><a class="btn btn-secondary" href="/add">Add person</a></div>
+                <div>
+                <form action="/tree" method="post">
+                    <input autofocus name="search" placeholder="search" type="search" value="{%if search is defined and search %}{{ search }}{% endif %}">
+                    <button class="btn btn-secondary" type="submit">Search</button>
+                </form>
+                </div>
                 {% endif %}
                 {% if current_user.is_authenticated %}
                 <div class="home"><a class="btn btn-secondary" href="/logout">Logout</a></div>
