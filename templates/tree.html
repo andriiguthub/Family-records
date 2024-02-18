@@ -5,18 +5,6 @@ Tree
 {% endblock %}
 
 {% block main %}
-<header class="navbar">
-    <div>
-        <a href="/add" class="btn btn-primary">Add person</a>
-    </div>
-    <div>
-        <form action="/tree" method="post">
-            <input autofocus name="search" placeholder="search" type="search"
-                value="{%if search is defined and search %}{{ search }}{% endif %}">
-            <button class="btn btn-secondary" type="submit">Search</button>
-        </form>
-    </div>
-</header>
 <table class="table table-striped">
     <thead class="thead-light">
         <tr>
