@@ -26,7 +26,19 @@
     <body>
         <div class="container">
             <div class="header">
+                {% if current_user.is_authenticated %}
+                <div class="home"><a class="btn btn-secondary" href="/tree">Home</a></div>
+                {% else %}
                 <div class="home"><a class="btn btn-secondary" href="/">Home</a></div>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                <div class="home"><a class="btn btn-secondary" href="/add">Add person</a></div>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                <div class="home"><a class="btn btn-secondary" href="/logout">Logout</a></div>
+                {% else %}
+                <div class="home"><a class="btn btn-secondary" href="/login">Login</a></div>
+                {% endif %}
             </div>
             {% block main %}{% endblock %}
         </div>
