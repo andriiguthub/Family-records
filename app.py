@@ -120,7 +120,8 @@ def tree():
     if request.method == 'POST':
         search = request.form['search']
         if search == "":
-            user_data = db.execute("SELECT * FROM person").fetchall()
+            sql = "SELECT * FROM person ORDER BY lastname"
+            user_data = db.execute(sql).fetchall()
         if search != "":
             user_data = db.execute("SELECT * FROM person WHERE lastname LIKE ? OR name LIKE ?", [search, search]).fetchall()
         return render_template("tree.html", user_data=user_data, search=search)
