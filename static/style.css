@@ -70,3 +70,8 @@ body {
 .dead {
   background-image: url(/static/dead.svg);
 }
+
+.header {
+  display: flex;
+  margin: auto;
+}
