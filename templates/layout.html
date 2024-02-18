@@ -39,8 +39,9 @@
                 {% if current_user.is_authenticated %}
                 <div class=""><a class="btn btn-secondary btn-margin" href="/logout">Logout</a></div>
                 {% else %}
-                <div class=""><a class="btn btn-secondary btn-margin" href="/register">Register</a></div>
-                <div class=""><a class="btn btn-secondary btn-margin" href="/login">Login</a></div>
+                <div class="">
+                    <a class="btn btn-secondary btn-margin" href="/register">Register</a>
+                    <a class="btn btn-secondary btn-margin" href="/login">Login</a></div>
                 {% endif %}
             </header>
             {% block main %}{% endblock %}
