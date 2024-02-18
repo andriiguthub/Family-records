@@ -196,9 +196,9 @@ def edit():
         person_id = request.args.get('person_id')
         person_data = db.execute("SELECT * FROM person WHERE id = ?", [person_id]).fetchone()
         father = db.execute("SELECT * FROM parent JOIN person ON parent.father_id = person.id WHERE parent.person_id = ?", [person_id]).fetchone()
-        man = db.execute(f"SELECT * FROM person WHERE person.sex = ? and person.birth_date < ? and id != person_id ORDER BY ?", ['male', '{person_data[birth_date]}', 'birth_date']).fetchall()
+        man = db.execute(f"SELECT * FROM person WHERE person.sex = ? AND person.birth_date < ? AND id != {person_id} ORDER BY ?", ['male', '{person_data[birth_date]}', 'birth_date']).fetchall()
         mother = db.execute("SELECT * FROM parent JOIN person ON parent.mother_id = person.id WHERE parent.person_id = ?", [person_id]).fetchone()
-        woman = db.execute(f"SELECT * FROM person WHERE person.sex = ? and person.birth_date < ? and id != person_id ORDER BY ?", ['female', '{person_data[birth_date]}', 'birth_date']).fetchall()
+        woman = db.execute(f"SELECT * FROM person WHERE person.sex = ? AND person.birth_date < ? AND person.id != {person_id} ORDER BY ?", ['female', '{person_data[birth_date]}', 'birth_date']).fetchall()
         return render_template("edit.html", person_data=person_data, father=father, mother=mother, man=man, woman=woman, person_id=person_id)
 
 
