@@ -76,6 +76,6 @@ body {
   margin: auto;
 }
 
-.btn-margin {
+.btn-margin :first-child, .btn-margin :last-child {
   margin: 0px 10px 0px 10px;
 }
