@@ -60,6 +60,8 @@ def index():
 def register():
     if request.method == 'POST':
         apikey = generate_password_hash(os.environ['APIKEY'])
+        if not apikey:
+            return render_template("register.html", error="APIKEY IS NOT SET!")
         username = request.form['username']
         password = request.form['password']
         confirmation = request.form['confirmation']
