@@ -5,11 +5,7 @@
 {% endblock %}
 
 {% block main %}
-    <header class="navbar">
-        <div>
-            <a href="/tree" class="btn btn-secondary">HOME</a>
-        </div>
-    </header>
+
     {% if action %}
     <form action="/{{ action }}" method="post">
         <input type="hidden" name="origin_person_id" value="{{ origin_person_id }}">
