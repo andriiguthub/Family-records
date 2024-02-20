@@ -26,22 +26,19 @@
     <body>
         <div class="container-flex">
             <header class="navbar">
-                <div class=""><a class="btn btn-secondary btn-margin" href="/">Home</a></div>
+                <a class="btn btn-secondary btn-margin" href="/">Home</a>
                 {% if current_user.is_authenticated %}
-                <div class=""><a class="btn btn-primary btn-margin" href="/add">Add person</a></div>
-                <div>
+                <a class="btn btn-primary btn-margin" href="/add">Add person</a>
                 <form action="/tree" method="post">
                     <input autofocus name="search" placeholder="search" type="search" value="{%if search is defined and search %}{{ search }}{% endif %}">
                     <button class="btn btn-secondary btn-margin" type="submit">Search</button>
                 </form>
-                </div>
                 {% endif %}
                 {% if current_user.is_authenticated %}
-                <div class=""><a class="btn btn-secondary btn-margin" href="/logout">Logout</a></div>
+                <a class="btn btn-secondary btn-margin" href="/logout">Logout</a></div>
                 {% else %}
-                <div class="">
                     <a class="btn btn-secondary btn-margin" href="/register">Register</a>
-                    <a class="btn btn-secondary btn-margin" href="/login">Login</a></div>
+                    <a class="btn btn-secondary btn-margin" href="/login">Login</a>
                 {% endif %}
             </header>
             {% block main %}{% endblock %}
