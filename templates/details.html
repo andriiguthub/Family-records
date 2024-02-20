@@ -87,9 +87,32 @@ Details
             {% endif %}
             </div>
             {% if spouse_data %}
-            spouse:
-                <table>
-                {% for spouse in spouse_data %}
+            spouse:<br />
+        {%if spouse_data is defined and spouse_data %}
+        {% for spouse in spouse_data %}
+            <div class="row">
+                <div class="{% if spouse.sex == 'male' %}man{% endif %}{% if spouse.sex == 'female' %}woman{% endif %}">
+                    {{ spouse.name }} {{ spouse.lastname }} <a class="btn btn-secondary" href="/edit?person_id={{spouse.id}}">Edit</a>
+                </div>
+            </div>
+            {% if spouse.birth_date or spouse.birth_place%}
+            <div class="row">
+                <div class="born"></div>
+                <div class="col">
+                    {{ spouse.birth_date }}{% if spouse.birth_place %} ({{ spouse.birth_place }}){% endif %}
+                </div>
+            </div>
+            {% endif %}
+            {% if spouse.death_date or spouse.death_place%}
+            <div class="row">
+                <div class="dead"></div>
+                <div class="col">
+                    {{ spouse.death_date }}{% if spouse.death_place %} ({{ spouse.death_place }}){% endif %}
+                </div>
+            </div>    
+            {% endif %}
+<!--                 <table>
+                
                 <tr>
                     <td><a class="btn btn-secondary {% if spouse.sex == 'male' %}man{% endif %}{% if spouse.sex == 'female' %}woman{% endif %}" href="/details?person_id={{spouse.id}}">{{ spouse.name }} {{ spouse.lastname }}</a></td>
                     <td>&#xF6E0;&nbsp;{{ spouse.birth_date }}</td>
@@ -98,8 +121,9 @@ Details
                     <td>{{ spouse.death_place }}</td>
                     <td><a class="btn btn-secondary" href="/edit?person_id={{spouse.id}}">Edit</a></td>
                 </tr>
-                {% endfor %}
-            </table>
+                
+            </table> -->
+        {% endfor %}
             {% endif %}
         </div>
     </div>
