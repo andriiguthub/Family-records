@@ -76,6 +76,10 @@ body {
   margin: auto;
 }
 
-.btn-margin:first-child, .btn-margin:last-child {
-  margin: 0px 10px 0px 10px;
+.btn-margin:first-child {
+  margin: 0px 00px 0px 10px;
+}
+
+.btn-margin:last-child {
+  margin: 0px 10px 0px 0px;
 }
