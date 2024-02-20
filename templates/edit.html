@@ -5,11 +5,6 @@ Edit
 {% endblock %}
 
 {% block main %}
-<header class="navbar">
-    <div>
-        <a href="/tree" class="btn btn-secondary">HOME</a>
-    </div>
-</header>
 <form action="/edit" method="post">
     <input name="person_id" type="hidden" value="{{ person_id }}">
     <div class="form-row">
