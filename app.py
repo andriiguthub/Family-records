@@ -238,12 +238,21 @@ def details():
     person_id = request.args.get('person_id')
     if not len(person_id) == 0 or not person_id is None:
         person_data = db.execute("SELECT * FROM person WHERE id = ?", [person_id]).fetchone()
-        spouse_data = db.execute("SELECT * FROM person WHERE person.id IN (SELECT spouse.spouse_id from spouse WHERE person_id = ?);", [person_id]).fetchall()
-        father_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.father_id WHERE parent.person_id = ?", [person_id]).fetchone()
-        mother_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.mother_id WHERE parent.person_id = ?", [person_id]).fetchone()
-        child_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.person_id WHERE \
-            parent.father_id = ? OR parent.mother_id = ?", [person_id, person_id]).fetchall()
-        return render_template("details.html", person_data=person_data, spouse_data=spouse_data, father_data=father_data, mother_data=mother_data, child_data=child_data)
+        spouse_data = db.execute("SELECT * FROM person WHERE person.id IN (SELECT \
+                                 spouse.spouse_id from spouse WHERE person_id = ?);", \
+                                    [person_id]).fetchall()
+        father_data = db.execute("SELECT * FROM person JOIN parent ON person.id = \
+                                 parent.father_id WHERE parent.person_id = ?", \
+                                    [person_id]).fetchone()
+        mother_data = db.execute("SELECT * FROM person JOIN parent ON person.id = \
+                                 parent.mother_id WHERE parent.person_id = ?", \
+                                    [person_id]).fetchone()
+        child_data = db.execute("SELECT * FROM person JOIN parent ON person.id = \
+                                parent.person_id WHERE parent.father_id = ? OR \
+                                parent.mother_id = ?", [person_id, person_id]).fetchall()
+        return render_template("details.html", person_data=person_data, spouse_data=spouse_data, \
+                               father_data=father_data, mother_data=mother_data, \
+                                child_data=child_data)
     else:
         return redirect("/tree")
 
@@ -269,21 +278,26 @@ def add_parent():
                 mother_id = request.form['mother_id']
             except:
                 mother_id = ""
-            sql = f"INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES \
-                ('{name}', '{lastname}', '{birth_date}', '{birth_place}', '{death_date}', '{death_place}', '{sex}');"
+            sql = f"INSERT INTO person (name, lastname, birth_date, birth_place, death_date, \
+                    death_place, sex) VALUES ('{name}', '{lastname}', '{birth_date}', \
+                    '{birth_place}', '{death_date}', '{death_place}', '{sex}');"
             db.executescript(sql)
-            person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND \
-                birth_place = ? AND death_date = ? AND death_place = ? AND sex = ? ORDER BY id DESC", \
-                                [name, lastname, birth_date, birth_place, death_date, death_place, sex])
+            person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND \
+                                birth_date = ? AND birth_place = ? AND death_date = ? AND \
+                                death_place = ? AND sex = ? ORDER BY id DESC", [name, lastname, \
+                                birth_date, birth_place, death_date, death_place, sex])
             person_id = person.fetchone()['id']
             print(person_id)
-            sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{mother_id}');"
+            sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', \
+                '{father_id}', '{mother_id}');"
             db.executescript(sql)
             try:
                 if sex == "male":
-                    sql = f"UPDATE parent SET father_id = '{person_id}' WHERE person_id = {origin_person_id};"
+                    sql = f"UPDATE parent SET father_id = '{person_id}' WHERE \
+                    person_id = {origin_person_id};"
                 if sex == "female":
-                    sql = f"UPDATE parent SET mother_id = '{person_id}' WHERE person_id = {origin_person_id};"
+                    sql = f"UPDATE parent SET mother_id = '{person_id}' WHERE \
+                    person_id = {origin_person_id};"
                 db.executescript(sql)
             except Exception as error:
                 print("SQL ERROR!!!", error)
@@ -292,9 +306,13 @@ def add_parent():
             print("TRY ERRROR!!!", error)
     else:
         origin_person_id = request.args.get('person_id')
-        man = db.execute("SELECT * FROM person WHERE sex = ? AND id != ?", ['male', origin_person_id]).fetchall()
-        woman = db.execute("SELECT * FROM person WHERE sex = ? AND id != ?", ['female', origin_person_id]).fetchall()
-        return render_template("add.html", man=man, woman=woman, origin_person_id=origin_person_id, action=f"add_parent?person_id={origin_person_id}")
+        man = db.execute("SELECT * FROM person WHERE sex = ? AND id != ?", ['male', \
+                            origin_person_id]).fetchall()
+        woman = db.execute("SELECT * FROM person WHERE sex = ? AND id != ?", ['female', \
+                            origin_person_id]).fetchall()
+        return render_template("add.html", man=man, woman=woman, \
+                               origin_person_id=origin_person_id, \
+                                action=f"add_parent?person_id={origin_person_id}")
 
 @app.route("/add_child", methods=["GET", "POST"])
 @login_required
@@ -317,19 +335,23 @@ def add_child():
                 mother_id = request.form['mother_id']
             except:
                 mother_id = ""
-            sql = f"INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES \
-                ('{name}', '{lastname}', '{birth_date}', '{birth_place}', '{death_date}', '{death_place}', '{sex}');"
+            sql = f"INSERT INTO person (name, lastname, birth_date, birth_place, death_date, \
+                    death_place, sex) VALUES ('{name}', '{lastname}', '{birth_date}', \
+                    '{birth_place}', '{death_date}', '{death_place}', '{sex}');"
             db.executescript(sql)
-            person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND \
-                birth_place = ? AND death_date = ? AND death_place = ? AND sex = ? ORDER BY id DESC", \
-                                [name, lastname, birth_date, birth_place, death_date, death_place, sex])
+            person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND \
+                                birth_date = ? AND birth_place = ? AND death_date = ? AND \
+                                death_place = ? AND sex = ? ORDER BY id DESC", [name, lastname, \
+                                birth_date, birth_place, death_date, death_place, sex])
             person_id = person.fetchone()['id']
             sql = f"SELECT sex FROM person where id = '{origin_person_id}';"
             parent_sex = db.execute(sql).fetchone()['sex']
             if parent_sex == "male":
-                sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{origin_person_id}', '{mother_id}');"
+                sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES \
+                    ('{person_id}', '{origin_person_id}', '{mother_id}');"
             if parent_sex == "female":
-                sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{origin_person_id}');"
+                sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES \
+                    ('{person_id}', '{father_id}', '{origin_person_id}');"
             try:
                 db.executescript(sql)
             except Exception as error:
@@ -339,7 +361,8 @@ def add_child():
             print("TRY ERRROR!!!", error)
     else:
         origin_person_id = request.args.get('person_id')
-        origin_person_sex = db.execute("SELECT sex FROM person WHERE id = ?", [origin_person_id]).fetchone()['sex']
+        origin_person_sex = db.execute("SELECT sex FROM person WHERE id = ?", \
+                                       [origin_person_id]).fetchone()['sex']
         if origin_person_sex == 'male':
             father = db.execute("SELECT * FROM person WHERE id = ?", [origin_person_id]).fetchone()
         else: father = ""
@@ -349,7 +372,8 @@ def add_child():
         man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
         woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female']).fetchall()
         return render_template("add.html", father=father, mother=mother, man=man, woman=woman, \
-                               origin_person_id=origin_person_id, action=f"add_child?person_id={origin_person_id}")
+                               origin_person_id=origin_person_id, \
+                                action=f"add_child?person_id={origin_person_id}")
 
 @app.route("/add_spouse", methods=["GET", "POST"])
 @login_required
@@ -360,9 +384,11 @@ def add_spouse():
             spouse = request.form['spouse']
             marriage_date = request.form['marriage_date']
             divorce_date = request.form['divorce_date']
-            sql = f"INSERT INTO spouse (person_id, spouse_id, marriage_date, divorce_date) VALUES ('{origin_person_id}', '{spouse}', '{marriage_date}', '{divorce_date}');"
+            sql = f"INSERT INTO spouse (person_id, spouse_id, marriage_date, divorce_date) VALUES \
+                ('{origin_person_id}', '{spouse}', '{marriage_date}', '{divorce_date}');"
             db.executescript(sql)
-            sql = f"INSERT INTO spouse (person_id, spouse_id, marriage_date, divorce_date) VALUES ('{spouse}', '{origin_person_id}', '{marriage_date}', '{divorce_date}');"
+            sql = f"INSERT INTO spouse (person_id, spouse_id, marriage_date, divorce_date) VALUES \
+                ('{spouse}', '{origin_person_id}', '{marriage_date}', '{divorce_date}');"
             db.executescript(sql)
             return redirect(f"/details?person_id={origin_person_id}")
         except Exception as error:
@@ -371,4 +397,6 @@ def add_spouse():
     else:
         origin_person_id = request.args.get('person_id')
         people = db.execute("SELECT * FROM person WHERE id !=?",[origin_person_id]).fetchall()
-        return render_template("add_spouse.html", people=people, origin_person_id=origin_person_id, action=f"add_spouse?person_id={origin_person_id}")
+        return render_template("add_spouse.html", people=people, \
+                               origin_person_id=origin_person_id, \
+                                action=f"add_spouse?person_id={origin_person_id}")
