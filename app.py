@@ -165,7 +165,8 @@ def add():
         person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND \
                             birth_date = ? AND birth_place = ? AND death_date = ? AND \
                             death_place = ? AND sex = ? ORDER BY id DESC", \
-                                [name, lastname, birth_date, birth_place, death_date, death_place, sex])
+                                [name, lastname, birth_date, birth_place, death_date, \
+                                 death_place, sex])
         person_id = person.fetchone()['id']
         sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES \
             ('{person_id}', '{father_id}', '{mother_id}');"
