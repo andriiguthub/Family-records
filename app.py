@@ -190,7 +190,7 @@ def edit():
         print(f"'{person_id}', '{father_id}', '{mother_id}'")
         sql = f"SELECT * FROM parent WHERE person_id = {person_id};"
         inparents = db.execute(sql).fetchone()
-        if not inparents == None:
+        if not inparents is None:
             sql = f"UPDATE person SET name = '{name}', lastname = '{lastname}', birth_date = '{birth_date}', birth_place = '{birth_place}', death_date = '{death_date}', death_place = '{death_place}', sex = '{sex}' WHERE id = {person_id}; UPDATE parent SET father_id = '{father_id}', mother_id = '{mother_id}' WHERE person_id = '{person_id}';"
         else:
             sql = f"UPDATE person SET name = '{name}', lastname = '{lastname}', birth_date = '{birth_date}', birth_place = '{birth_place}', death_date = '{death_date}', death_place = '{death_place}', sex = '{sex}' WHERE id = {person_id}; INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{mother_id}');"
@@ -210,7 +210,7 @@ def edit():
 @login_required
 def details():
     person_id = request.args.get('person_id')
-    if not len(person_id) == 0 or not person_id == None:
+    if not len(person_id) == 0 or not person_id is None:
         person_data = db.execute("SELECT * FROM person WHERE id = ?", [person_id]).fetchone()
         spouse_data = db.execute("SELECT * FROM person WHERE person.id IN (SELECT spouse.spouse_id from spouse WHERE person_id = ?);", [person_id]).fetchall()
         father_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.father_id WHERE parent.person_id = ?", [person_id]).fetchone()
