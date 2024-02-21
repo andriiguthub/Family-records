@@ -80,7 +80,7 @@ def register():
                                    error="Password should be equal to Password confirmation!")
         if not check_password_hash(apikey, code):
             return render_template("register.html", \
-                                   error="Incorrect 2FA code, check your messages and try again!") 
+                                   error="Incorrect 2FA code, check your messages and try again!")
 
         else:
             new_user = users(username=username, hash=generate_password_hash(password))
