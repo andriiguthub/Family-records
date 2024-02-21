@@ -2,7 +2,8 @@ import os
 import sqlite3
 from flask import Flask, redirect, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_required, UserMixin, login_user, logout_user, current_user
+from flask_login import LoginManager, login_required, UserMixin, login_user, logout_user, \
+    current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure application
@@ -75,9 +76,11 @@ def register():
         elif not confirmation:
             return render_template("register.html", error="Password confirmation is required!")
         elif not password == confirmation:
-            return render_template("register.html", error="Password should be equal to Password confirmation!")
+            return render_template("register.html", \
+                                   error="Password should be equal to Password confirmation!")
         if not check_password_hash(apikey, code):
-            return render_template("register.html", error="Incorrect 2FA code, check your messages and try again!") 
+            return render_template("register.html", \
+                                   error="Incorrect 2FA code, check your messages and try again!") 
 
         else:
             new_user = users(username=username, hash=generate_password_hash(password))
@@ -128,7 +131,8 @@ def tree():
             sql = "SELECT * FROM person ORDER BY lastname"
             user_data = db.execute(sql).fetchall()
         if search != "":
-            user_data = db.execute("SELECT * FROM person WHERE lastname LIKE ? OR name LIKE ?", [search, search]).fetchall()
+            user_data = db.execute("SELECT * FROM person WHERE lastname LIKE ? OR name LIKE ?", \
+                                   [search, search]).fetchall()
         return render_template("tree.html", user_data=user_data, search=search)
     else:
         user_data = db.execute("SELECT * FROM person").fetchall()
@@ -154,14 +158,17 @@ def add():
             mother_id = request.form['mother_id']
         except:
             mother_id = ""
-        sql = f"INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES \
-            ('{name}', '{lastname}', '{birth_date}', '{birth_place}', '{death_date}', '{death_place}', '{sex}');"
+        sql = f"INSERT INTO person (name, lastname, birth_date, birth_place, death_date, \
+            death_place, sex) VALUES ('{name}', '{lastname}', '{birth_date}', '{birth_place}', \
+                '{death_date}', '{death_place}', '{sex}');"
         db.executescript(sql)
-        person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND birth_place = ? \
-            AND death_date = ? AND death_place = ? AND sex = ? ORDER BY id DESC", \
-                            [name, lastname, birth_date, birth_place, death_date, death_place, sex])
+        person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND \
+                            birth_date = ? AND birth_place = ? AND death_date = ? AND \
+                            death_place = ? AND sex = ? ORDER BY id DESC", \
+                                [name, lastname, birth_date, birth_place, death_date, death_place, sex])
         person_id = person.fetchone()['id']
-        sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{mother_id}');"
+        sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES \
+            ('{person_id}', '{father_id}', '{mother_id}');"
         db.executescript(sql)
         return redirect("/tree")
     else:
@@ -194,14 +201,13 @@ def edit():
         sql = f"SELECT * FROM parent WHERE person_id = {person_id};"
         inparents = db.execute(sql).fetchone()
         if not inparents is None:
-            sql = f"UPDATE person SET name = '{name}', lastname = '{lastname}', birth_date = '{birth_date}', \
-                birth_place = '{birth_place}', death_date = '{death_date}', death_place = '{death_place}', \
-                sex = '{sex}' WHERE id = {person_id}; UPDATE parent SET father_id = '{father_id}', \
-                mother_id = '{mother_id}' WHERE person_id = '{person_id}';"
+            sql = f"UPDATE person SET name = '{name}', lastname = '{lastname}', \
+                birth_date = '{birth_date}', birth_place = '{birth_place}', \
+                    death_date = '{death_date}', death_place = '{death_place}', sex = '{sex}' \
+                        WHERE id = {person_id}; UPDATE parent SET father_id = '{father_id}', \
+                            mother_id = '{mother_id}' WHERE person_id = '{person_id}';"
         else:
-            sql = f"UPDATE person SET name = '{name}', lastname = '{lastname}', birth_date = '{birth_date}', birth_place = '{birth_place}', \
-                death_date = '{death_date}', death_place = '{death_place}', sex = '{sex}' WHERE id = {person_id}; INSERT INTO parent (person_id, \
-                father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{mother_id}');"
+            sql = f"UPDATE person SET name = '{name}', lastname = '{lastname}', birth_date = '{birth_date}', birth_place = '{birth_place}', death_date = '{death_date}', death_place = '{death_place}', sex = '{sex}' WHERE id = {person_id}; INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{mother_id}');"
         db.executescript(sql)
         return redirect(f"/details?person_id={person_id}")
     else:
