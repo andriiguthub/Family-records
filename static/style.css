@@ -45,15 +45,15 @@ body {
     justify-content: flex-end;
 }
 
-.man, .woman {
+.male, .female {
     color: white !important;
 }
 
-.man {
+.male {
     background-color: #347DC1 !important;
 }
 
-.woman {
+.female {
     background-color: #CC6594 !important;
 }
 
