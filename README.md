@@ -1,4 +1,5 @@
 [![Lint Code Base](https://github.com/andylebedev/Family-records/actions/workflows/super-linter.yml/badge.svg)](https://github.com/andylebedev/Family-records/actions/workflows/super-linter.yml)
+[![Pylint](https://github.com/andylebedev/Family-records/actions/workflows/pylint.yml/badge.svg)](https://github.com/andylebedev/Family-records/actions/workflows/pylint.yml)
 
 This will be web site to store relational data for family history.
 
