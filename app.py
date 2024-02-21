@@ -154,9 +154,12 @@ def add():
             mother_id = request.form['mother_id']
         except:
             mother_id = ""
-        sql = f"INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES ('{name}', '{lastname}', '{birth_date}', '{birth_place}', '{death_date}', '{death_place}', '{sex}');"
+        sql = f"INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES \
+            ('{name}', '{lastname}', '{birth_date}', '{birth_place}', '{death_date}', '{death_place}', '{sex}');"
         db.executescript(sql)
-        person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND birth_place = ? AND death_date = ? AND death_place = ? AND sex = ? ORDER BY id DESC", [name, lastname, birth_date, birth_place, death_date, death_place, sex])
+        person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND birth_place = ? \
+            AND death_date = ? AND death_place = ? AND sex = ? ORDER BY id DESC", \
+                            [name, lastname, birth_date, birth_place, death_date, death_place, sex])
         person_id = person.fetchone()['id']
         sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{mother_id}');"
         db.executescript(sql)
@@ -191,20 +194,25 @@ def edit():
         sql = f"SELECT * FROM parent WHERE person_id = {person_id};"
         inparents = db.execute(sql).fetchone()
         if not inparents is None:
-            sql = f"UPDATE person SET name = '{name}', lastname = '{lastname}', birth_date = '{birth_date}', birth_place = '{birth_place}', death_date = '{death_date}', death_place = '{death_place}', sex = '{sex}' WHERE id = {person_id}; UPDATE parent SET father_id = '{father_id}', mother_id = '{mother_id}' WHERE person_id = '{person_id}';"
+            sql = f"UPDATE person SET name = '{name}', lastname = '{lastname}', birth_date = '{birth_date}', \
+                birth_place = '{birth_place}', death_date = '{death_date}', death_place = '{death_place}', \
+                sex = '{sex}' WHERE id = {person_id}; UPDATE parent SET father_id = '{father_id}', \
+                mother_id = '{mother_id}' WHERE person_id = '{person_id}';"
         else:
             sql = f"UPDATE person SET name = '{name}', lastname = '{lastname}', birth_date = '{birth_date}', birth_place = '{birth_place}', \
-            death_date = '{death_date}', death_place = '{death_place}', sex = '{sex}' WHERE id = {person_id}; INSERT INTO parent (person_id, \
-            father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{mother_id}');"
+                death_date = '{death_date}', death_place = '{death_place}', sex = '{sex}' WHERE id = {person_id}; INSERT INTO parent (person_id, \
+                father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{mother_id}');"
         db.executescript(sql)
         return redirect(f"/details?person_id={person_id}")
     else:
         person_id = request.args.get('person_id')
         person_data = db.execute("SELECT * FROM person WHERE id = ?", [person_id]).fetchone()
         father = db.execute("SELECT * FROM parent JOIN person ON parent.father_id = person.id WHERE parent.person_id = ?", [person_id]).fetchone()
-        man = db.execute(f"SELECT * FROM person WHERE person.sex = ? AND person.birth_date < ? AND id != {person_id} ORDER BY ?", ['male', '{person_data[birth_date]}', 'birth_date']).fetchall()
+        man = db.execute(f"SELECT * FROM person WHERE person.sex = ? AND person.birth_date < ? AND id != \
+            {person_id} ORDER BY ?", ['male', '{person_data[birth_date]}', 'birth_date']).fetchall()
         mother = db.execute("SELECT * FROM parent JOIN person ON parent.mother_id = person.id WHERE parent.person_id = ?", [person_id]).fetchone()
-        woman = db.execute(f"SELECT * FROM person WHERE person.sex = ? AND person.birth_date < ? AND person.id != {person_id} ORDER BY ?", ['female', '{person_data[birth_date]}', 'birth_date']).fetchall()
+        woman = db.execute(f"SELECT * FROM person WHERE person.sex = ? AND person.birth_date < ? AND \
+            person.id != {person_id} ORDER BY ?", ['female', '{person_data[birth_date]}', 'birth_date']).fetchall()
         return render_template("edit.html", person_data=person_data, father=father, mother=mother, man=man, woman=woman, person_id=person_id)
 
 
@@ -217,7 +225,8 @@ def details():
         spouse_data = db.execute("SELECT * FROM person WHERE person.id IN (SELECT spouse.spouse_id from spouse WHERE person_id = ?);", [person_id]).fetchall()
         father_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.father_id WHERE parent.person_id = ?", [person_id]).fetchone()
         mother_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.mother_id WHERE parent.person_id = ?", [person_id]).fetchone()
-        child_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.person_id WHERE parent.father_id = ? OR parent.mother_id = ?", [person_id, person_id]).fetchall()
+        child_data = db.execute("SELECT * FROM person JOIN parent ON person.id = parent.person_id WHERE \
+            parent.father_id = ? OR parent.mother_id = ?", [person_id, person_id]).fetchall()
         return render_template("details.html", person_data=person_data, spouse_data=spouse_data, father_data=father_data, mother_data=mother_data, child_data=child_data)
     else:
         return redirect("/tree")
@@ -244,9 +253,12 @@ def add_parent():
                 mother_id = request.form['mother_id']
             except:
                 mother_id = ""
-            sql = f"INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES ('{name}', '{lastname}', '{birth_date}', '{birth_place}', '{death_date}', '{death_place}', '{sex}');"
+            sql = f"INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES \
+                ('{name}', '{lastname}', '{birth_date}', '{birth_place}', '{death_date}', '{death_place}', '{sex}');"
             db.executescript(sql)
-            person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND birth_place = ? AND death_date = ? AND death_place = ? AND sex = ? ORDER BY id DESC", [name, lastname, birth_date, birth_place, death_date, death_place, sex])
+            person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND \
+                birth_place = ? AND death_date = ? AND death_place = ? AND sex = ? ORDER BY id DESC", \
+                                [name, lastname, birth_date, birth_place, death_date, death_place, sex])
             person_id = person.fetchone()['id']
             print(person_id)
             sql = f"INSERT INTO parent (person_id, father_id, mother_id) VALUES ('{person_id}', '{father_id}', '{mother_id}');"
@@ -289,9 +301,12 @@ def add_child():
                 mother_id = request.form['mother_id']
             except:
                 mother_id = ""
-            sql = f"INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES ('{name}', '{lastname}', '{birth_date}', '{birth_place}', '{death_date}', '{death_place}', '{sex}');"
+            sql = f"INSERT INTO person (name, lastname, birth_date, birth_place, death_date, death_place, sex) VALUES \
+                ('{name}', '{lastname}', '{birth_date}', '{birth_place}', '{death_date}', '{death_place}', '{sex}');"
             db.executescript(sql)
-            person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND birth_place = ? AND death_date = ? AND death_place = ? AND sex = ? ORDER BY id DESC", [name, lastname, birth_date, birth_place, death_date, death_place, sex])
+            person = db.execute("SELECT id FROM person WHERE name = ? AND lastname = ? AND birth_date = ? AND \
+                birth_place = ? AND death_date = ? AND death_place = ? AND sex = ? ORDER BY id DESC", \
+                                [name, lastname, birth_date, birth_place, death_date, death_place, sex])
             person_id = person.fetchone()['id']
             sql = f"SELECT sex FROM person where id = '{origin_person_id}';"
             parent_sex = db.execute(sql).fetchone()['sex']
@@ -317,7 +332,8 @@ def add_child():
         else: mother = ""
         man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
         woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female']).fetchall()
-        return render_template("add.html", father=father, mother=mother, man=man, woman=woman, origin_person_id=origin_person_id, action=f"add_child?person_id={origin_person_id}")
+        return render_template("add.html", father=father, mother=mother, man=man, woman=woman, \
+                               origin_person_id=origin_person_id, action=f"add_child?person_id={origin_person_id}")
 
 @app.route("/add_spouse", methods=["GET", "POST"])
 @login_required
