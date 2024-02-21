@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from flask import Flask, redirect, render_template, request, session
+from flask import Flask, redirect, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, UserMixin, login_user, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
