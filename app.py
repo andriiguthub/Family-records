@@ -80,14 +80,11 @@ def register():
         if not check_password_hash(apikey, code):
             return render_template("register.html", \
                                    error="Incorrect 2FA code, check your messages and try again!")
-
-        else:
-            new_user = users(username=username, hash=generate_password_hash(password))
-            udb.session.add(new_user)
-            udb.session.commit()
-            return render_template("login.html",  error="Registration successfull!")
-    else:
-        return render_template("register.html")
+        new_user = users(username=username, hash=generate_password_hash(password))
+        udb.session.add(new_user)
+        udb.session.commit()
+        return render_template("login.html",  error="Registration successfull!")
+    return render_template("register.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -107,12 +104,10 @@ def login():
         # Redirect user to home page
         login_user(user)
         return redirect("/tree")
-    # User reached route via GET (as by clicking a link or via redirect)
-    else:
-        user = db.execute("SELECT * FROM users").fetchall()
-        if not user:
-            return render_template("register.html", error="Create user!")
-        return render_template("login.html")
+    user = db.execute("SELECT * FROM users").fetchall()
+    if not user:
+        return render_template("register.html", error="Create user!")
+    return render_template("login.html")
 
 
 @app.route("/logout")
@@ -170,10 +165,9 @@ def add():
             ('{person_id}', '{father_id}', '{mother_id}');"
         db.executescript(sql)
         return redirect("/tree")
-    else:
-        man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
-        woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female']).fetchall()
-        return render_template("add.html", man=man, woman=woman, action="add")
+    man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
+    woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female']).fetchall()
+    return render_template("add.html", man=man, woman=woman, action="add")
 
 
 @app.route("/edit", methods=["GET", "POST"])
