@@ -52,8 +52,7 @@ def after_request(response):
 def index():
     if current_user.is_authenticated:
         return redirect("/tree")
-    else:
-        return render_template("index.html")
+    return render_template("index.html")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -71,11 +70,11 @@ def register():
             return render_template("register.html", error="Unique name is required!")
         if not username:
             return render_template("register.html", error="Name is required!")
-        elif not password:
+        if not password:
             return render_template("register.html", error="Password is required!")
-        elif not confirmation:
+        if not confirmation:
             return render_template("register.html", error="Password confirmation is required!")
-        elif not password == confirmation:
+        if not password == confirmation:
             return render_template("register.html", \
                                    error="Password should be equal to Password confirmation!")
         if not check_password_hash(apikey, code):
@@ -134,9 +133,8 @@ def tree():
             user_data = db.execute("SELECT * FROM person WHERE lastname LIKE ? OR name LIKE ?", \
                                    [search, search]).fetchall()
         return render_template("tree.html", user_data=user_data, search=search)
-    else:
-        user_data = db.execute("SELECT * FROM person").fetchall()
-        return render_template("tree.html", user_data=user_data)
+    user_data = db.execute("SELECT * FROM person").fetchall()
+    return render_template("tree.html", user_data=user_data)
 
 
 @app.route("/add", methods=["GET", "POST"])
