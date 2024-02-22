@@ -90,18 +90,15 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        # Ensure username was submitted
         if not request.form.get("username"):
             return render_template("login.html", error="Name is required!")
-        # Ensure password was submitted
-        elif not request.form.get("password"):
+        if not request.form.get("password"):
             return render_template("login.html", error="Password is required!")
         username = request.form.get("username")
         password = request.form.get('password')
         user = users.query.filter_by(username=username).first()
         if not user or not check_password_hash(user.hash, password):
             return render_template("login.html", error="invalid username and/or password")
-        # Redirect user to home page
         login_user(user)
         return redirect("/tree")
     user = db.execute("SELECT * FROM users").fetchall()
