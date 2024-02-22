@@ -293,6 +293,7 @@ def add_parent():
             return redirect(f"/details?person_id={origin_person_id}")
         except Exception as error:
             print("TRY ERRROR!!!", error)
+            return redirect(f"/details?person_id={origin_person_id}")
     else:
         origin_person_id = request.args.get('person_id')
         man = db.execute("SELECT * FROM person WHERE sex = ? AND id != ?", ['male', \
