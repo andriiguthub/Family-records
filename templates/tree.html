@@ -19,7 +19,7 @@ Tree
     <tbody>
         {% for id in user_data %}
         <tr>
-            <td><a class="btn btn-secondary {% if id.sex == 'male' %}man{% endif %}{% if id.sex == 'female' %}woman{% endif %}" href="/details?person_id={{id.id}}">{{ id.name }} {{ id.lastname }}</a></td>
+            <td><a class="btn btn-secondary {{ id.sex }}" href="/details?person_id={{id.id}}">{{ id.name }} {{ id.lastname }}</a></td>
             <td>{{ id.birth_date }}</td>
             <td>{{ id.birth_place }}</td>
             <td>{{ id.death_date }}</td>
