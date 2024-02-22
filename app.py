@@ -1,5 +1,4 @@
-import os
-import sqlite3
+import os, sqlite3
 from flask import Flask, redirect, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, UserMixin, login_user, logout_user, \
