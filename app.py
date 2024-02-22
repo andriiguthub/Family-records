@@ -294,15 +294,14 @@ def add_parent():
         except Exception as error:
             print("TRY ERRROR!!!", error)
             return redirect(f"/details?person_id={origin_person_id}")
-    else:
-        origin_person_id = request.args.get('person_id')
-        man = db.execute("SELECT * FROM person WHERE sex = ? AND id != ?", ['male', \
-                            origin_person_id]).fetchall()
-        woman = db.execute("SELECT * FROM person WHERE sex = ? AND id != ?", ['female', \
-                            origin_person_id]).fetchall()
-        return render_template("add.html", man=man, woman=woman, \
-                               origin_person_id=origin_person_id, \
-                                action=f"add_parent?person_id={origin_person_id}")
+    origin_person_id = request.args.get('person_id')
+    man = db.execute("SELECT * FROM person WHERE sex = ? AND id != ?", ['male', \
+                        origin_person_id]).fetchall()
+    woman = db.execute("SELECT * FROM person WHERE sex = ? AND id != ?", ['female', \
+                        origin_person_id]).fetchall()
+    return render_template("add.html", man=man, woman=woman, \
+                           origin_person_id=origin_person_id, \
+                            action=f"add_parent?person_id={origin_person_id}")
 
 @app.route("/add_child", methods=["GET", "POST"])
 @login_required
@@ -349,21 +348,21 @@ def add_child():
             return redirect(f"/details?person_id={origin_person_id}")
         except Exception as error:
             print("TRY ERRROR!!!", error)
-    else:
-        origin_person_id = request.args.get('person_id')
-        origin_person_sex = db.execute("SELECT sex FROM person WHERE id = ?", \
-                                       [origin_person_id]).fetchone()['sex']
-        if origin_person_sex == 'male':
-            father = db.execute("SELECT * FROM person WHERE id = ?", [origin_person_id]).fetchone()
-        else: father = ""
-        if origin_person_sex == 'female':
-            mother = db.execute("SELECT * FROM person WHERE id = ?", [origin_person_id]).fetchone()
-        else: mother = ""
-        man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
-        woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female']).fetchall()
-        return render_template("add.html", father=father, mother=mother, man=man, woman=woman, \
-                               origin_person_id=origin_person_id, \
-                                action=f"add_child?person_id={origin_person_id}")
+            return redirect(f"/details?person_id={origin_person_id}")
+    origin_person_id = request.args.get('person_id')
+    origin_person_sex = db.execute("SELECT sex FROM person WHERE id = ?", \
+                                   [origin_person_id]).fetchone()['sex']
+    if origin_person_sex == 'male':
+        father = db.execute("SELECT * FROM person WHERE id = ?", [origin_person_id]).fetchone()
+    else: father = ""
+    if origin_person_sex == 'female':
+        mother = db.execute("SELECT * FROM person WHERE id = ?", [origin_person_id]).fetchone()
+    else: mother = ""
+    man = db.execute("SELECT * FROM person WHERE sex = ?", ['male']).fetchall()
+    woman = db.execute("SELECT * FROM person WHERE sex = ?", ['female']).fetchall()
+    return render_template("add.html", father=father, mother=mother, man=man, woman=woman, \
+                           origin_person_id=origin_person_id, \
+                            action=f"add_child?person_id={origin_person_id}")
 
 @app.route("/add_spouse", methods=["GET", "POST"])
 @login_required
@@ -384,9 +383,8 @@ def add_spouse():
         except Exception as error:
             print("ERRROR!!!", error)
             return redirect(f"/details?person_id={origin_person_id}")
-    else:
-        origin_person_id = request.args.get('person_id')
-        people = db.execute("SELECT * FROM person WHERE id !=?",[origin_person_id]).fetchall()
-        return render_template("add_spouse.html", people=people, \
-                               origin_person_id=origin_person_id, \
-                                action=f"add_spouse?person_id={origin_person_id}")
+    origin_person_id = request.args.get('person_id')
+    people = db.execute("SELECT * FROM person WHERE id !=?",[origin_person_id]).fetchall()
+    return render_template("add_spouse.html", people=people, \
+                           origin_person_id=origin_person_id, \
+                            action=f"add_spouse?person_id={origin_person_id}")
