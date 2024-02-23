@@ -69,7 +69,8 @@ def register():
         if user or not username:
             return render_template("register.html", error="Name is required!")
         if not password or not confirmation:
-            return render_template("register.html", error="Password and password confirmation is required!")
+            return render_template("register.html", \
+                                   error="Password and password confirmation is required!")
         if not password == confirmation:
             return render_template("register.html", \
                                    error="Password should be equal to Password confirmation!")
