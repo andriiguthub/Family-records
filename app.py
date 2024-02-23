@@ -66,14 +66,10 @@ def register():
         confirmation = request.form['confirmation']
         code = request.form['code']
         user = Users.query.filter_by(username=username).first()
-        if user:
-            return render_template("register.html", error="Unique name is required!")
-        if not username:
+        if user or not username:
             return render_template("register.html", error="Name is required!")
-        if not password:
-            return render_template("register.html", error="Password is required!")
-        if not confirmation:
-            return render_template("register.html", error="Password confirmation is required!")
+        if not password or not confirmation:
+            return render_template("register.html", error="Password and password confirmation is required!")
         if not password == confirmation:
             return render_template("register.html", \
                                    error="Password should be equal to Password confirmation!")
