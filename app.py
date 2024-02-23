@@ -16,7 +16,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'familytree.db')
 udb = SQLAlchemy(app)
 
-class users(UserMixin, udb.Model):
+class Users(UserMixin, udb.Model):
     id = udb.Column(udb.Integer, primary_key=True)
     username = udb.Column(udb.String(80), unique=True, nullable=False)
     hash = udb.Column(udb.String(120), unique=True, nullable=False)
@@ -32,7 +32,7 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return users.query.get(int(user_id))
+    return Users.query.get(int(user_id))
 
 #Configure to use SQLite database
 con = sqlite3.connect("familytree.db", check_same_thread=False)
@@ -65,7 +65,7 @@ def register():
         password = request.form['password']
         confirmation = request.form['confirmation']
         code = request.form['code']
-        user = users.query.filter_by(username=username).first()
+        user = Users.query.filter_by(username=username).first()
         if user:
             return render_template("register.html", error="Unique name is required!")
         if not username:
@@ -80,7 +80,7 @@ def register():
         if not check_password_hash(apikey, code):
             return render_template("register.html", \
                                    error="Incorrect 2FA code, check your messages and try again!")
-        new_user = users(username=username, hash=generate_password_hash(password))
+        new_user = Users(username=username, hash=generate_password_hash(password))
         udb.session.add(new_user)
         udb.session.commit()
         return render_template("login.html",  error="Registration successfull!")
@@ -96,7 +96,7 @@ def login():
             return render_template("login.html", error="Password is required!")
         username = request.form.get("username")
         password = request.form.get('password')
-        user = users.query.filter_by(username=username).first()
+        user = Users.query.filter_by(username=username).first()
         if not user or not check_password_hash(user.hash, password):
             return render_template("login.html", error="invalid username and/or password")
         login_user(user)
