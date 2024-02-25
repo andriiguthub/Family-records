@@ -1,8 +1,9 @@
-FROM python:3.9
+FROM python:3.9-alpine
 
 WORKDIR /family
 
-RUN wget https://github.com/andylebedev/Family-records/archive/refs/heads/main.zip && \
+RUN apk update && apk upgrade && apk add sqlite && \
+        wget https://github.com/andylebedev/Family-records/archive/refs/heads/main.zip && \
         unzip main.zip && \
         mv Family-records-main/* /family/ && \
         rm -rf Family-records-main && \
