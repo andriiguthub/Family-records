@@ -13,7 +13,7 @@ app = Flask(__name__)
 def get_locale():
     return request.accept_languages.best_match(['en', 'ua'])
 
-babel = Babel(app)
+babel = Babel(app, locale_selector=get_locale)
 
 # init SQLAlchemy so we can use it later in our models
 app.config['SECRET_KEY'] = '9E3M3wqAM7yIFIEI00BYA2xyKxVDoy6wNMPc9L4e'
