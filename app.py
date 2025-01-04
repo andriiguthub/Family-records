@@ -1,6 +1,7 @@
 import os
 import sqlite3
 from flask import Flask, redirect, render_template, request
+from flask_babel import Babel
 from flask_login import LoginManager, login_required, UserMixin, login_user, logout_user, \
     current_user
 from flask_sqlalchemy import SQLAlchemy
@@ -8,6 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure application
 app = Flask(__name__)
+babel = Babel(app)
 
 # init SQLAlchemy so we can use it later in our models
 app.config['SECRET_KEY'] = '9E3M3wqAM7yIFIEI00BYA2xyKxVDoy6wNMPc9L4e'
