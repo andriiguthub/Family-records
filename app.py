@@ -1,6 +1,7 @@
 import os
 import sqlite3
 from flask import Flask, redirect, render_template, request
+from flask_babel import Babel
 from flask_login import LoginManager, login_required, UserMixin, login_user, logout_user, \
     current_user
 from flask_sqlalchemy import SQLAlchemy
@@ -8,6 +9,11 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure application
 app = Flask(__name__)
+
+def get_locale():
+    return request.accept_languages.best_match(['en', 'ua'])
+
+babel = Babel(app, locale_selector=get_locale)
 
 # init SQLAlchemy so we can use it later in our models
 app.config['SECRET_KEY'] = '9E3M3wqAM7yIFIEI00BYA2xyKxVDoy6wNMPc9L4e'
@@ -115,12 +121,13 @@ def logout():
 def tree():
     if request.method == 'POST':
         search = request.form['search']
-        if search == "":
-            sql = "SELECT * FROM person ORDER BY lastname"
-            user_data = db.execute(sql).fetchall()
         if search != "":
             user_data = db.execute("SELECT * FROM person WHERE lastname LIKE ? OR name LIKE ?", \
                                    [search, search]).fetchall()
+        else:
+            sql = "SELECT * FROM person ORDER BY lastname"
+            user_data = db.execute(sql).fetchall()
+
         return render_template("tree.html", user_data=user_data, search=search)
     user_data = db.execute("SELECT * FROM person").fetchall()
     return render_template("tree.html", user_data=user_data)

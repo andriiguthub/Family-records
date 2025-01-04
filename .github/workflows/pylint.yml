@@ -17,7 +17,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pylint pylint-flask Flask Flask-Session flask-login flask-sqlalchemy requests
+        pip install pylint pylint-flask Flask Flask-Session flask-login flask-sqlalchemy requests Flask-Babel
     - name: Analysing the code with pylint
       run: |
         pylint --errors-only $(git ls-files '*.py')
