@@ -127,7 +127,8 @@ def tree():
         if search != "":
             user_data = db.execute("SELECT * FROM person WHERE lastname LIKE ? OR name LIKE ?", \
                                    [search, search]).fetchall()
-        else user_data = ""
+        else:
+            user_data = ""
         return render_template("tree.html", user_data=user_data, search=search)
     user_data = db.execute("SELECT * FROM person").fetchall()
     return render_template("tree.html", user_data=user_data)
