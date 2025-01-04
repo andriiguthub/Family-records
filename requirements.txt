@@ -3,3 +3,4 @@ Flask-Session
 flask-login
 flask-sqlalchemy
 requests
+Flask-Babel
