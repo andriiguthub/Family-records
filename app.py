@@ -9,6 +9,10 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure application
 app = Flask(__name__)
+
+def get_locale():
+    return request.accept_languages.best_match(['en', 'ua'])
+
 babel = Babel(app)
 
 # init SQLAlchemy so we can use it later in our models
