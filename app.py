@@ -121,14 +121,13 @@ def logout():
 def tree():
     if request.method == 'POST':
         search = request.form['search']
-        if search == "":
-            sql = "SELECT * FROM person ORDER BY lastname"
-            user_data = db.execute(sql).fetchall()
         if search != "":
             user_data = db.execute("SELECT * FROM person WHERE lastname LIKE ? OR name LIKE ?", \
                                    [search, search]).fetchall()
         else:
-            user_data = ""
+            sql = "SELECT * FROM person ORDER BY lastname"
+            user_data = db.execute(sql).fetchall()
+
         return render_template("tree.html", user_data=user_data, search=search)
     user_data = db.execute("SELECT * FROM person").fetchall()
     return render_template("tree.html", user_data=user_data)
