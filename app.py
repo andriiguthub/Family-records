@@ -10,13 +10,12 @@ from models import db, User, Person, Parent, Spouse
 # Configure application
 app = Flask(__name__)
 
-db.init_app(app)
-
 # init SQLAlchemy so we can use it later in our models
 app.config['SECRET_KEY'] = '9E3M3wqAM7yIFIEI00BYA2xyKxVDoy6wNMPc9L4e'
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'familytree.db')
+db.init_app(app)
 udb = SQLAlchemy(app)
 
 class Users(UserMixin, udb.Model):
