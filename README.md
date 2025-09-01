@@ -1,4 +1,5 @@
 [![Pylint](https://github.com/andylebedev/Family-records/actions/workflows/pylint.yml/badge.svg)](https://github.com/andylebedev/Family-records/actions/workflows/pylint.yml)
+[![Lint Code Base](https://github.com/andriiguthub/Family-records/actions/workflows/super-linter.yml/badge.svg)](https://github.com/andriiguthub/Family-records/actions/workflows/super-linter.yml)
 
 This will be app to store relational data for family history.
 
