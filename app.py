@@ -5,7 +5,6 @@ from flask_login import LoginManager, login_required, UserMixin, login_user, log
     current_user
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
-from models import udb, User, Person, Parent, Spouse
 
 # Configure application
 app = Flask(__name__)
@@ -15,8 +14,7 @@ app.config['SECRET_KEY'] = '9E3M3wqAM7yIFIEI00BYA2xyKxVDoy6wNMPc9L4e'
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'familytree.db')
-#udb = SQLAlchemy(app)
-udb.init_app(app)
+udb = SQLAlchemy(app)
 
 class Users(UserMixin, udb.Model):
     id = udb.Column(udb.Integer, primary_key=True)
@@ -25,7 +23,6 @@ class Users(UserMixin, udb.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
-
 
 # Configure login
 login_manager = LoginManager()
