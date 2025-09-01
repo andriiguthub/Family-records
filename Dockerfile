@@ -2,7 +2,7 @@ FROM python:3.9-alpine
 
 WORKDIR /family
 
-RUN apk update && apk upgrade && apk add sqlite && \
+RUN apk update && apk upgrade && apk add sqlite unzip && \
         wget https://github.com/andylebedev/Family-records/archive/refs/heads/main.zip && \
         unzip main.zip && \
         mv Family-records-main/* /family/ && \
