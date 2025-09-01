@@ -5,7 +5,7 @@ WORKDIR /family
 RUN apk update && apk upgrade && apk add sqlite unzip && \
         python -m pip install --root-user-action --upgrade pip && \
         pip3 install --root-user-action -r requirements.txt
-RUN wget https://github.com/andylebedev/Family-records/archive/refs/heads/main.zip && \
+RUN wget -O https://github.com/andylebedev/Family-records/archive/refs/heads/main.zip && \
         unzip main.zip && \
         mv Family-records-main/* /family/ && \
         rm -rf Family-records-main && \
