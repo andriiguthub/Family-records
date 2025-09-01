@@ -58,9 +58,9 @@ def index():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == 'POST':
-        apikey = generate_password_hash(os.environ['APIKEY'])
-        if not apikey:
-            return render_template("register.html", error="APIKEY IS NOT SET!")
+        api_key = generate_password_hash(os.environ['API_KEY'])
+        if not api_key:
+            return render_template("register.html", error="API_KEY IS NOT SET!")
         username = request.form['username']
         password = request.form['password']
         confirmation = request.form['confirmation']
@@ -74,7 +74,7 @@ def register():
         if not password == confirmation:
             return render_template("register.html", \
                                    error="Password should be equal to Password confirmation!")
-        if not check_password_hash(apikey, code):
+        if not check_password_hash(api_key, code):
             return render_template("register.html", \
                                    error="Incorrect 2FA code, check your messages and try again!")
         new_user = Users(username=username, hash=generate_password_hash(password))
