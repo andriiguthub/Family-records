@@ -3,8 +3,8 @@ FROM python:3.9-alpine
 WORKDIR /family
 
 RUN apk update && apk upgrade && apk add sqlite unzip && \
-        python -m pip install --upgrade pip && \
-        pip3 install -r requirements.txt
+        python -m pip install --root-user-action --upgrade pip && \
+        pip3 install --root-user-action -r requirements.txt
 RUN wget https://github.com/andylebedev/Family-records/archive/refs/heads/main.zip && \
         unzip main.zip && \
         mv Family-records-main/* /family/ && \
