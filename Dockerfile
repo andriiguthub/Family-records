@@ -9,5 +9,5 @@ RUN wget https://github.com/andylebedev/Family-records/archive/refs/heads/main.z
         unzip main.zip && \
         mv Family-records-main/* /family/ && \
         rm -rf Family-records-main && \
-        sqlite3 familytree.db < db.init
+        sqlite3 /family/familytree.db < db.init
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
