@@ -1,11 +1,15 @@
-from app import db
+from flask_sqlalchemy import SQLAlchemy
 
-class Users(db.Model):
+db = SQLAlchemy()
+
+class User(db.Model):
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, nullable=False)
-    hash = db.Column(db.String, nullable=False)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    hash = db.Column(db.String(120), nullable=False)
 
 class Person(db.Model):
+    __tablename__ = 'person'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     lastname = db.Column(db.String)
@@ -16,12 +20,14 @@ class Person(db.Model):
     sex = db.Column(db.String)
 
 class Parent(db.Model):
+    __tablename__ = 'parent'
     id = db.Column(db.Integer, primary_key=True)
-    person_id = db.Column(db.Integer, nullable=False)
-    father_id = db.Column(db.Integer, db.ForeignKey('person.id'))
-    mother_id = db.Column(db.Integer, db.ForeignKey('person.id'))
+    person_id = db.Column(db.Integer, db.ForeignKey('person.id'), nullable=False)
+    father_id = db.Column(db.Integer, db.ForeignKey('person.id'), nullable=True)
+    mother_id = db.Column(db.Integer, db.ForeignKey('person.id'), nullable=True)
 
 class Spouse(db.Model):
+    __tablename__ = 'spouse'
     id = db.Column(db.Integer, primary_key=True)
     person_id = db.Column(db.Integer, db.ForeignKey('person.id'), nullable=False)
     spouse_id = db.Column(db.Integer, db.ForeignKey('person.id'), nullable=False)
