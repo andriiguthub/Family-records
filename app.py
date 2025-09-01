@@ -15,8 +15,8 @@ app.config['SECRET_KEY'] = '9E3M3wqAM7yIFIEI00BYA2xyKxVDoy6wNMPc9L4e'
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'familytree.db')
-db.init_app(app)
 udb = SQLAlchemy(app)
+udb.init_app(app)
 
 class Users(UserMixin, udb.Model):
     id = udb.Column(udb.Integer, primary_key=True)
