@@ -5,9 +5,12 @@ from flask_login import LoginManager, login_required, UserMixin, login_user, log
     current_user
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
+from models import db, User, Person, Parent, Spouse
 
 # Configure application
 app = Flask(__name__)
+
+db.init_app(app)
 
 # init SQLAlchemy so we can use it later in our models
 app.config['SECRET_KEY'] = '9E3M3wqAM7yIFIEI00BYA2xyKxVDoy6wNMPc9L4e'
