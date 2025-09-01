@@ -5,7 +5,7 @@ from flask_login import LoginManager, login_required, UserMixin, login_user, log
     current_user
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
-from models import db, User, Person, Parent, Spouse
+from models import udb, User, Person, Parent, Spouse
 
 # Configure application
 app = Flask(__name__)
